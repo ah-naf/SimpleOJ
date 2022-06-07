@@ -56,3 +56,17 @@
 .w-md-editor-preview>p {
     font-family: "Ubuntu Mono" !important;
 }
+
+.modal-explanation .w-md-editor-toolbar>ul>li>button>svg {
+    width: 15px;
+    height: 15px;
+}
+
+.modal-explanation .w-md-editor-toolbar {
+    height: 80px !important;
+}
+
+.problemPage {
+    height: calc(100vh - 100px);
+    /* overflow: hidden; */
+}

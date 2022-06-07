@@ -6,8 +6,8 @@ function ProblemPage() {
   const [verdict, setVerdict] = useState("tle");
 
   return (
-    <div className="h-screen flex">
-      <div className="flex-grow h-screen overflow-y-auto sc1">
+    <div className="flex">
+      <div className="flex-grow h-screen overflow-y-auto sc1 problemPage p-2 px-4">
         <p>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Suscipit sunt
           earum vel consequatur officiis perferendis accusantium, reiciendis
@@ -125,7 +125,7 @@ function ProblemPage() {
           magni?
         </p>
       </div>
-      <div className="min-w-[45%] border border-r-0 pr-0 pb-0 p-3 flex flex-col">
+      <div className="min-w-[45%] border problemPage border-r-0 pr-0 pb-0 p-3 flex flex-col overflow-hidden">
         <div className="">
           <Editor />
         </div>
