@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -14,4 +15,44 @@
 
 .CodeMirror-gutter {
     background: white;
+}
+
+.sc1::-webkit-scrollbar {
+    width: 10px;
+    height: 4px;
+}
+
+.sc1::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.22);
+    border-radius: 10px;
+}
+
+.sc1::-webkit-scrollbar-thumb {
+    background-color: whitesmoke;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+}
+
+.w-md-editor-toolbar>ul>li>button {
+    color: gray;
+    padding: 10px;
+    height: unset;
+    border-radius: 50%;
+}
+
+.w-md-editor-toolbar>ul>li>button>svg {
+    width: 20px;
+    height: 20px;
+}
+
+.w-md-editor-toolbar {
+    height: 60px !important;
+}
+
+.w-md-editor {
+    height: 100% !important;
+}
+
+.w-md-editor-preview>p {
+    font-family: "Ubuntu Mono" !important;
 }
