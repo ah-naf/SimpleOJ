@@ -16,7 +16,7 @@ export default function Navbar() {
           />
         </div>
       </div>
-      <div className="absolute w-full h-full bg-black opacity-60 blur-sm top-0 -z-1"></div>
+      <div className="absolute w-full h-full bg-[#322b39] top-0 -z-1"></div>
     </div>
   );
 }
