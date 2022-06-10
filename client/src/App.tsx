@@ -13,9 +13,7 @@ function App() {
         <Route path="/problem/:id" element={<ProblemPage />} />
         <Route path="/create" element={<AddProblem />} />
       </Routes>
-      <footer>
-        <p className="text-xs m-0">Made By <a href="https://github.com/ah-naf">Ahnaf</a></p>
-      </footer>
+     
     </div>
   );
 }

@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 .CodeMirror {
-    min-height: calc(100vh - 400px);
+    min-height: calc(100vh - 450px);
     font-size: 16px;
     line-height: 1.8;
     width: 100%;
@@ -11,6 +11,7 @@
     border: 1px solid gainsboro;
     padding: 0 10px;
     border-right: 0;
+    font-weight: 400 !important;
 }
 
 .CodeMirror-gutter {
@@ -69,4 +70,8 @@
 .problemPage {
     height: calc(100vh - 100px);
     /* overflow: hidden; */
+}
+
+.nextui-c-ftJsHY {
+    display: unset !important;
 }

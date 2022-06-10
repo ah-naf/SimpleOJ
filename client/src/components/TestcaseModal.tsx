@@ -1,12 +1,26 @@
 import { Modal, useModal, Button, Checkbox } from "@nextui-org/react";
 import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import rehypeSanitize from "rehype-sanitize";
+import { addTestcase } from "../store/ProblemSlice";
+import { RootState } from "../store/store";
 
 export default function TestcaseModal() {
   const { setVisible, bindings } = useModal();
-  const [selected, setSelected] = useState(true);
-  const [value, setValue] = useState("**Hello world!!!**");
+  const [value, setValue] = useState({
+    input: "",
+    output: "",
+    sample: false,
+    explanation: "",
+  });
+  const dispatch = useDispatch();
+
+  const handleAdd = () => {
+    dispatch(addTestcase(value));
+    setVisible(false)
+    setValue({input: '', output: '', sample: false, explanation: ''})
+  };
 
   return (
     <div>
@@ -31,29 +45,31 @@ export default function TestcaseModal() {
             <label htmlFor="">Input</label>
             <textarea
               className="border border-slate-400 rounded-sm mb-4 mt-1 outline-none p-2"
-              name=""
-              id=""
+              value={value.input}
+              onChange={(e) => setValue({ ...value, input: e.target.value })}
             ></textarea>
             <label htmlFor="">Output</label>
             <textarea
               className="border border-slate-400 rounded-sm mb-2 mt-1 outline-none p-2"
-              name=""
-              id=""
+              value={value.output}
+              onChange={(e) => setValue({ ...value, output: e.target.value })}
             ></textarea>
           </div>
           <Checkbox
-            isSelected={selected}
+            isSelected={value.sample}
             color="primary"
-            onChange={setSelected}
+            onChange={(e) => setValue({ ...value, sample: e.valueOf() })}
           >
             Sample test case
           </Checkbox>
-          {selected && (
-            <div className="flex flex-col font-mono font-semibold modal-explanation">
-              <label className="mb-2 text-md">Explanation</label>
+          {value.sample && (
+            <div className="flex flex-col font-mono modal-explanation">
+              <label className="mb-2 text-md font-semibold">Explanation</label>
               <MDEditor
-                value={value}
-                onChange={(e) => setValue(e as string)}
+                value={value.explanation}
+                onChange={(e) =>
+                  setValue({ ...value, explanation: e as string })
+                }
                 previewOptions={{
                   rehypePlugins: [[rehypeSanitize]],
                 }}
@@ -66,7 +82,7 @@ export default function TestcaseModal() {
           <Button auto flat color="error" onClick={() => setVisible(false)}>
             Close
           </Button>
-          <Button auto onClick={() => setVisible(false)}>
+          <Button auto onClick={handleAdd}>
             Add
           </Button>
         </Modal.Footer>
