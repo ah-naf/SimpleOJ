@@ -14,3 +14,10 @@ export interface PropblemDetailType {
     statement: string
     desc: string
 }
+
+export interface ProblemType extends PropblemDetailType {
+    testcase ?: TestcaseType[],
+    updatedAt: string,
+    createdAt: string
+    _id: string
+}

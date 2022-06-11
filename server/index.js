@@ -76,6 +76,24 @@ app.post("/add", async (req, res) => {
   }
 });
 
+app.get('/problems', async (req, res) => {
+  try {
+    const data = await Problem.find()
+    return res.status(200).json(data)
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+})
+
+app.get('/problems/:id', async (req, res) => {
+  try {
+    const data = await Problem.findById(req.params.id)
+    return res.status(200).json(data)
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+})
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log("Server is listening"));
