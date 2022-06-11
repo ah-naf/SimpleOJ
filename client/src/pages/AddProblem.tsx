@@ -1,29 +1,32 @@
+import { Loading } from "@nextui-org/react";
 import MDEditor from "@uiw/react-md-editor";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
 import rehypeSanitize from "rehype-sanitize";
 import TestcaseContainer from "../components/TestcaseContainer";
 import TestcaseModal from "../components/TestcaseModal";
+import { asyncProblemAdd } from "../store/ProblemSlice";
+import { RootState } from "../store/store";
 
 export default function AddProblem() {
   const [problemDetail, setProblemDetail] = useState({
     slug: "",
-    name: "",
+    title: "",
     desc: "",
     statement: "",
     input: "",
     output: "",
     constraints: "",
   });
+  const testcase = useSelector((state: RootState) => state.problem.testcase);
+  const loading = useSelector((state: RootState) => state.problem.loading);
+  const dispatch = useDispatch();
+
 
   const handleAdd = async () => {
-    const res = await fetch('http://localhost:5000/add', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(problemDetail)
-    })
-  }
+    dispatch(asyncProblemAdd({ detail: problemDetail, testcase }) as any);
+  };
 
   return (
     <>
@@ -52,9 +55,9 @@ export default function AddProblem() {
           <div className="flex">
             <p className="w-48 min-w-fit">Problem Name</p>
             <input
-              value={problemDetail.name}
+              value={problemDetail.title}
               onChange={(e) =>
-                setProblemDetail({ ...problemDetail, name: e.target.value })
+                setProblemDetail({ ...problemDetail, title: e.target.value })
               }
               type="text"
               className="flex-grow outline-none border-2 border-gray-400 p-2 rounded-sm shadow"
@@ -83,7 +86,6 @@ export default function AddProblem() {
                 onChange={(e) =>
                   setProblemDetail({ ...problemDetail, statement: e as string })
                 }
-                
                 preview="edit"
               />
             </div>
@@ -144,10 +146,21 @@ export default function AddProblem() {
         </div>
       </div>
       <div className="sticky bottom-0 flex items-center justify-end p-4 z-50 border shadow bg-[whitesmoke] space-x-4">
-        <TestcaseModal />
-        <button className="outline-none border shadow bg-slate-600 text-gray-200 rounded-sm font-mono font-semibold px-5 py-2" onClick={handleAdd}>
-          Proceed
-        </button>
+        {loading ? (
+          <div className="mr-10">
+            <Loading type="points" />
+          </div>
+        ) : (
+          <>
+            <TestcaseModal />
+            <button
+              className="outline-none border shadow bg-slate-600 text-gray-200 rounded-sm font-mono font-semibold px-5 py-2"
+              onClick={handleAdd}
+            >
+              Proceed
+            </button>
+          </>
+        )}
       </div>
     </>
   );

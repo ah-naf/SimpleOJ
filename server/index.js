@@ -1,36 +1,42 @@
-
-
 const express = require("express");
 const dotenv = require("dotenv");
+const mongoose = require("mongoose");
 dotenv.config();
 const { generateFile } = require("./generateFile");
 const { executeCpp } = require("./executeCpp");
 const { executePy } = require("./executePy");
 const cors = require("cors");
-const mongoose = require('mongoose')
 const app = express();
+const Problem = require("./models/Problem");
 
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect('mongodb+srv://ahnaf:8880@nodeexpressproject.zsqnc.mongodb.net/simpleoj?retryWrites=true&w=majority', () => console.log("DB Connected"))
+mongoose.connect(
+  "mongodb+srv://ahnaf:8880@cluster0.ma2wh.mongodb.net/simpleoj?retryWrites=true&w=majority",
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  () => console.log("DB Connected")
+);
 
 app.post("/run", async (req, res) => {
   let { language = "cpp", code } = req.body;
-//   code = `
-// #include<bits/stdc++.h>
-// using namespace std;
-// int main() {
-//     vector<int> v;
-//     int n; cin>>n;
-//     for(int i=0; i<n; i++) {
-//         int x; cin>>x;
-//         v.push_back(x);
-//     }
-//     for(int i=0; i<10000000; i++) {}
-//     for(auto it: v) cout<<it<<" ";
-// }
-// `;
+  //   code = `
+  // #include<bits/stdc++.h>
+  // using namespace std;
+  // int main() {
+  //     vector<int> v;
+  //     int n; cin>>n;
+  //     for(int i=0; i<n; i++) {
+  //         int x; cin>>x;
+  //         v.push_back(x);
+  //     }
+  //     for(int i=0; i<10000000; i++) {}
+  //     for(auto it: v) cout<<it<<" ";
+  // }
+  // `;
 
   if (code === undefined || !code) {
     return res.status(400).json({ success: false, error: "Empty code body!" });
@@ -50,9 +56,25 @@ app.post("/run", async (req, res) => {
   }
 });
 
-app.post('/add', async(req, res) => {
-  console.log(req.body)
-})
+app.post("/add", async (req, res) => {
+  const { testcase, detail } = req.body;
+
+  if (!testcase || !detail) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  const data = { ...detail, testcase: [...testcase] };
+
+  try {
+    const newProblem = new Problem(data);
+
+    const saved = await newProblem.save();
+
+    return res.status(201).json(saved);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 
