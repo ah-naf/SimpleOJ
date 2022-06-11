@@ -15,6 +15,16 @@ export default function AddProblem() {
     constraints: "",
   });
 
+  const handleAdd = async () => {
+    const res = await fetch('http://localhost:5000/add', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(problemDetail)
+    })
+  }
+
   return (
     <>
       <div className="max-w-4xl mx-auto font-mono my-4">
@@ -67,22 +77,20 @@ export default function AddProblem() {
           </div>
           <div className="flex items-start">
             <p className="w-48 min-w-fit">Problem Statement</p>
-            <div className="flex-grow ">
+            <div className="flex-grow max-w-[880px]">
               <MDEditor
                 value={problemDetail.statement}
                 onChange={(e) =>
                   setProblemDetail({ ...problemDetail, statement: e as string })
                 }
-                previewOptions={{
-                  rehypePlugins: [[rehypeSanitize]],
-                }}
+                
                 preview="edit"
               />
             </div>
           </div>
           <div className="flex items-start">
             <p className="w-48 min-w-fit">Input Format</p>
-            <div className="flex-grow ">
+            <div className="flex-grow  max-w-[880px]">
               <MDEditor
                 value={problemDetail.input}
                 onChange={(e) =>
@@ -97,7 +105,7 @@ export default function AddProblem() {
           </div>
           <div className="flex items-start">
             <p className="w-48 min-w-fit">Output Format</p>
-            <div className="flex-grow ">
+            <div className="flex-grow  max-w-[880px]">
               <MDEditor
                 value={problemDetail.output}
                 onChange={(e) =>
@@ -112,7 +120,7 @@ export default function AddProblem() {
           </div>
           <div className="flex items-start">
             <p className="w-48 min-w-fit">Constraints</p>
-            <div className="flex-grow ">
+            <div className="flex-grow  max-w-[880px]">
               <MDEditor
                 value={problemDetail.constraints}
                 onChange={(e) =>
@@ -137,7 +145,7 @@ export default function AddProblem() {
       </div>
       <div className="sticky bottom-0 flex items-center justify-end p-4 z-50 border shadow bg-[whitesmoke] space-x-4">
         <TestcaseModal />
-        <button className="outline-none border shadow bg-slate-600 text-gray-200 rounded-sm font-mono font-semibold px-5 py-2">
+        <button className="outline-none border shadow bg-slate-600 text-gray-200 rounded-sm font-mono font-semibold px-5 py-2" onClick={handleAdd}>
           Proceed
         </button>
       </div>

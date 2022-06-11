@@ -7,11 +7,13 @@ const { generateFile } = require("./generateFile");
 const { executeCpp } = require("./executeCpp");
 const { executePy } = require("./executePy");
 const cors = require("cors");
-
+const mongoose = require('mongoose')
 const app = express();
 
 app.use(express.json());
 app.use(cors());
+
+mongoose.connect('mongodb+srv://ahnaf:8880@nodeexpressproject.zsqnc.mongodb.net/simpleoj?retryWrites=true&w=majority', () => console.log("DB Connected"))
 
 app.post("/run", async (req, res) => {
   let { language = "cpp", code } = req.body;
@@ -47,6 +49,10 @@ app.post("/run", async (req, res) => {
     res.status(500).json({ err });
   }
 });
+
+app.post('/add', async(req, res) => {
+  console.log(req.body)
+})
 
 const PORT = process.env.PORT || 5000;
 

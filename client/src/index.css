@@ -52,6 +52,7 @@
 
 .w-md-editor {
     height: 100% !important;
+    overflow-x: auto;
 }
 
 .w-md-editor-preview>p {
@@ -74,4 +75,23 @@
 
 .nextui-c-ftJsHY {
     display: unset !important;
+}
+
+.w-md-editor-text-pre {
+    border-radius: 0 !important;
+    -webkit-text-fill-color: transparent !important;
+}
+
+.w-md-editor-text-input {
+    -webkit-text-fill-color: unset !important;
+    overflow-y: auto !important;
+    scrollbar-width: none !important;
+    /* Firefox */
+    -ms-overflow-style: none !important;
+}
+
+.w-md-editor-text-input::-webkit-scrollbar {
+    /* WebKit */
+    width: 0 !important;
+    height: 0 !important;
 }
