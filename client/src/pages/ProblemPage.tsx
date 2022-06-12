@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import Editor from "../components/Editor";
 import { asyncSingleProblemGet } from "../store/ProblemSlice";
 import { RootState } from "../store/store";
+import { TestcaseType } from "../utils/type";
 
 function ProblemPage() {
   const [bottomDrawer, setBottomDrawer] = useState("input");
@@ -14,79 +15,67 @@ function ProblemPage() {
     (state: RootState) => state.problem.singleProblem
   );
   const location = useLocation().pathname.split("/")[2];
+  const [sampleTestcase, setSampleTestcase] = useState<TestcaseType[]>([]);
+
+  useEffect(() => {
+    if (problem?.testcase) {
+      const temp = problem?.testcase.filter((item) => item.sample === true);
+      setSampleTestcase(temp);
+    }
+  }, [problem?.testcase]);
 
   useEffect(() => {
     dispatch(asyncSingleProblemGet(location) as any);
   }, []);
 
-  // TODO: Render Problem Details
-
   return (
     <div className="flex">
-      <div className="flex-grow h-screen overflow-y-auto sc1 problemPage p-2 px-4">
-        {/* <MDEditor.Markdown
-          source={problem?.statement}
-        /> */}
-        <h1 className="text-3xl py-3 border-b capitalize">{problem?.title}</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta
-          repellendus, ipsam repellat amet aliquid deleniti odio cum ab esse
-          dicta aliquam quod nostrum id enim, eius atque consectetur suscipit
-          non pariatur asperiores. Odit fugiat harum aut eligendi pariatur. Quos
-          tempora voluptates tempore praesentium ipsa et accusantium dicta
-          animi? Porro magnam necessitatibus itaque tempore amet ad tenetur.
-          Quis omnis, voluptatibus voluptatum ex quisquam optio quam non. Odit
-          officiis facilis repellat distinctio a illo doloribus, beatae nostrum
-          molestias, error rerum. Id quos fuga magni esse magnam deserunt dolore
-          accusantium voluptas voluptatum nam, possimus temporibus quaerat
-          consequatur nostrum eaque perferendis corporis repellat natus eum
-          facere rerum dolores iste? Quisquam atque iste culpa maiores ab.
-          Dolore sequi incidunt laboriosam rerum blanditiis sint laborum veniam
-          voluptatem, corporis assumenda odit eveniet cum explicabo quos autem
-          amet tempore. Dolor illum omnis ex impedit inventore voluptate quia.
-          Et magnam recusandae sed doloribus dolorem quod totam. Voluptates,
-          alias tempora asperiores corporis minus consectetur aliquid laudantium
-          possimus error est accusamus deleniti in voluptatem architecto.
-          Repellat veniam officiis, dolor et hic vero voluptatem reprehenderit,
-          vel praesentium aut optio consequuntur perferendis, velit numquam est
-          ex debitis atque unde earum? Labore praesentium dicta quis
-          exercitationem nulla ex maxime beatae illo excepturi veniam doloribus
-          quod omnis, dolor ab eos distinctio vitae nemo ipsum doloremque
-          corrupti obcaecati repellendus itaque. Soluta aliquid similique iusto
-          possimus quam deserunt nihil blanditiis unde obcaecati culpa dolorem
-          nam vero optio, illum asperiores expedita sequi repellendus nobis.
-          Quis qui est aut vel amet laborum aperiam quod repudiandae praesentium
-          doloremque. Ipsa reiciendis suscipit accusantium repellendus dolorem
-          earum eligendi, impedit doloremque id officiis hic beatae iste
-          laboriosam illum quos quia dolore perspiciatis perferendis repudiandae
-          aliquam. Velit suscipit repudiandae vero pariatur rem, eius aliquam
-          ullam aut voluptas nemo deleniti optio nam, iste natus enim? Deserunt
-          dolore ipsum aliquid consequatur adipisci id voluptate fugiat
-          temporibus sapiente? Debitis, incidunt! Consequatur magni eligendi
-          quas incidunt, vitae officia nulla culpa similique quo pariatur quae
-          suscipit aperiam tenetur optio aspernatur aliquid earum accusantium ea
-          a necessitatibus quam illum perspiciatis? At aperiam nihil nostrum
-          ratione fugiat numquam tempora quae saepe iure voluptatem esse maxime,
-          incidunt repellat, est dolore. Quisquam distinctio excepturi atque
-          architecto voluptatem cum eos voluptatibus earum aut, ut aliquid
-          officia commodi rem aperiam repudiandae quas unde. Nisi quod quidem
-          voluptatum excepturi accusantium repudiandae, nesciunt omnis
-          provident, impedit corporis dolores alias id error quaerat incidunt
-          voluptate officia quasi vitae repellendus ducimus illum dignissimos
-          maxime amet molestiae. Blanditiis corrupti obcaecati aliquam ut
-          consequatur unde odit suscipit aspernatur hic, placeat magni natus.
-          Possimus harum quod corporis tenetur dolores, laborum totam sunt
-          corrupti provident autem! Vero similique eveniet provident repellendus
-          veritatis quos molestiae quam aperiam ipsam necessitatibus. Laborum,
-          omnis soluta tempore molestias itaque at sunt ullam quisquam
-          accusantium quia, fugiat reiciendis. Cupiditate, hic blanditiis
-          dolores sint repellendus, et amet provident veniam qui nesciunt
-          expedita eveniet deserunt magni fugit est. Iste nam temporibus illo
-          quos rerum. Possimus ut, provident maiores quas exercitationem totam,
-          laudantium recusandae impedit perferendis nesciunt magnam quam,
-          doloribus vel expedita beatae id! Doloremque voluptatibus, omnis harum
-          molestias beatae ad reprehenderit?
-        </p>
+      <div className="flex-grow h-screen overflow-y-auto sc1 problemPage p-2 px-5">
+        <h1 className="text-3xl py-3 border-b capitalize mb-8 text-center">
+          {problem?.title}
+        </h1>
+        <MDEditor.Markdown source={problem?.statement} />
+        {problem?.input && (
+          <div className="my-6">
+            <h2 className="text-lg mb-2">Input Format</h2>
+            <MDEditor.Markdown source={problem?.input} />
+          </div>
+        )}
+        {problem?.output && (
+          <div className="my-6">
+            <h2 className="text-lg mb-2">Output Format</h2>
+            <MDEditor.Markdown source={problem?.output} />
+          </div>
+        )}
+        {problem?.constraints && (
+          <div className="my-6">
+            <h2 className="text-lg mb-2">Constraints</h2>
+            <MDEditor.Markdown source={problem?.constraints} />
+          </div>
+        )}
+        {sampleTestcase &&
+          sampleTestcase.map((item, index) => (
+            <div key={index}>
+              <div className="my-6">
+                <h2 className="text-lg mb-2">Sample Input {index + 1}</h2>
+                <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg">
+                  {item.input}
+                </p>
+              </div>
+              <div className="my-6">
+                <h2 className="text-lg mb-2">Sample Output {index + 1}</h2>
+                <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg">
+                  {item.output}
+                </p>
+              </div>
+              {item.explanation && (
+                <div className="my-6">
+                  <h2 className="text-lg mb-2">Explanation</h2>
+                  <MDEditor.Markdown source={item.explanation} />
+                </div>
+              )}
+            </div>
+          ))}
       </div>
       <div className="min-w-[45%] border problemPage border-r-0 pr-0 pb-0 p-3 flex flex-col overflow-hidden">
         <div className="">

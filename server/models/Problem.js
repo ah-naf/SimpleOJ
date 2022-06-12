@@ -12,8 +12,8 @@ const ProblemSchema = new mongoose.Schema(
       required: true,
     },
     desc: { type: String },
-    input: { type: String, required: true },
-    output: { type: String, required: true },
+    input: { type: String },
+    output: { type: String },
     constraints: { type: String },
     statement: { type: String, required: true },
     testcase: [

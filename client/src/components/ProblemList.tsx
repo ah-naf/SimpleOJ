@@ -19,7 +19,7 @@ export default function ProblemList() {
             <h2 className="text-xl m-0 hover:underline cursor-pointer capitalize">
               {item.title}
             </h2>
-            <p className="m-0 max-w-2xl mt-2 capitalize">{item.desc}</p>
+            <p className="m-0 max-w-2xl mt-2" style={{wordSpacing: '5px'}}>{item.desc}</p>
           </div>
 
           <button className="p-2 px-4 bg-slate-600 outline-none rounded shadow text-white">

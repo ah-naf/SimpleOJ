@@ -95,3 +95,8 @@
     width: 0 !important;
     height: 0 !important;
 }
+
+.wmde-markdown ul {
+    list-style-type: disc !important;
+    font-family: "Mukta", sans-serif !important;
+}
