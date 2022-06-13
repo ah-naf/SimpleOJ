@@ -82,6 +82,7 @@
     -webkit-text-fill-color: transparent !important;
 }
 
+.textarea,
 .w-md-editor-text-input {
     -webkit-text-fill-color: unset !important;
     overflow-y: auto !important;
@@ -90,7 +91,8 @@
     -ms-overflow-style: none !important;
 }
 
-.w-md-editor-text-input::-webkit-scrollbar {
+.w-md-editor-text-input::-webkit-scrollbar,
+.textarea::-webkit-scrollbar {
     /* WebKit */
     width: 0 !important;
     height: 0 !important;

@@ -25,7 +25,7 @@ mongoose.connect(
 // Code Related Route
 
 app.post("/run", async (req, res) => {
-  let { language = "cpp", code } = req.body;
+  let { language = "cpp", code, userInput } = req.body;
 
   if (code === undefined || !code) {
     return res.status(400).json({ success: false, error: "Empty code body!" });
@@ -46,8 +46,8 @@ app.post("/run", async (req, res) => {
     job["startedAt"] = new Date();
     // we need to run the file and send the response
     if (language === "cpp" || language === "c")
-      output = await executeCpp(filepath);
-    else output = await executePy(filepath);
+      output = await executeCpp(filepath, userInput);
+    else output = await executePy(filepath, userInput);
 
     job["completedAt"] = new Date();
     job["status"] = "success";
@@ -57,10 +57,8 @@ app.post("/run", async (req, res) => {
   } catch (err) {
     job["completedAt"] = new Date();
     job["status"] = "error";
-    job["output"] = JSON.stringify(err);
+    job["output"] = err;
     await job.save();
-    console.log(err);
-    res.status(500).json({ err, success: false });
   }
 });
 

@@ -8,7 +8,7 @@ if (!fs.existsSync(outputPath)) {
   fs.mkdirSync(outputPath, { recursive: true });
 }
 
-const executeCpp = (filepath) => {
+const executeCpp = (filepath, userInput) => {
   const jobId = path.basename(filepath).split(".")[0];
   const outPath = path.join(outputPath, `${jobId}.out`);
 
@@ -16,18 +16,16 @@ const executeCpp = (filepath) => {
     const child = exec(
       `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.out`
     );
-    child.stdin.write(
-        `10\n1 2 3 4 5 6 7 8 9 10`
-    );
+    child.stdin.write(userInput);
     child.stdin.end();
-    let output = ""
+    let output = "";
     child.stdout.on("data", (data) => {
       output += data;
     });
     child.stderr.on("data", (err) => {
       reject(err);
     });
-    child.on('exit', () => resolve(output))
+    child.on("exit", () => resolve(output));
   });
 };
 

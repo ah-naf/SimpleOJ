@@ -1,24 +1,56 @@
+import { Loading } from "@nextui-org/react";
 import MDEditor from "@uiw/react-md-editor";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Editor from "../components/Editor";
+import { asyncProgrammemRun } from "../store/CodeSlice";
 import { asyncSingleProblemGet } from "../store/ProblemSlice";
+import { useGetProblemStatusQuery } from "../store/services/ProblemStatus";
 import { RootState } from "../store/store";
 import { TestcaseType } from "../utils/type";
 
 function ProblemPage() {
   const [bottomDrawer, setBottomDrawer] = useState("input");
-  const [verdict, setVerdict] = useState("tle");
+  const [verdict, setVerdict] = useState("");
+  const [status, setStatus] = useState("in queue");
+  const [output, setOutput] = useState("");
   const dispatch = useDispatch();
   const problem = useSelector(
     (state: RootState) => state.problem.singleProblem
   );
   const location = useLocation().pathname.split("/")[2];
   const [sampleTestcase, setSampleTestcase] = useState<TestcaseType[]>([]);
-  const currentCode = useSelector((state: RootState) => state.code.currentCode)
-  const currentLang = useSelector((state: RootState) => state.code.currentLang)
+  const currentCode = useSelector((state: RootState) => state.code.currentCode);
+  const currentLang = useSelector((state: RootState) => state.code.currentLang);
+  const JobId = useSelector((state: RootState) => state.code.jobId);
+  const [skip, setSkip] = useState(false);
+  const [userInput, setUserInput] = useState("");
+  const [jobId, setJobId] = useState("")
+
+  useEffect(() => {
+    setJobId(JobId)
+  }, [JobId])
+
+  // Status polling
+  const problemData = useGetProblemStatusQuery(
+    jobId,
+    !!jobId && !skip ? { pollingInterval: 1000 } : { skip: true }
+  );
+
+  useEffect(() => {
+    const { data } = problemData;
+    if (data) {
+      if (data.job.status !== "in queue") {
+        setSkip(true);
+        setStatus(data.job.status);
+        setOutput(data.job.output);
+        console.log(data.job)
+      }
+    }
+    console.log(problemData.data)
+  }, [problemData.data]);
 
   useEffect(() => {
     if (problem?.testcase) {
@@ -31,36 +63,13 @@ function ProblemPage() {
     dispatch(asyncSingleProblemGet(location) as any);
   }, []);
 
-  const handleSubmit = async () => {
-    const res = await fetch('http://localhost:5000/run', {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({code: currentCode, language: currentLang})
-    })
-    const data = await res.json()
-    const jobId = data.jobId
-
-    let intervalId = setInterval(async () => {
-      const jobRes = await fetch(`http://localhost:5000/status/${jobId}`)
-      const jobData = await jobRes.json()
-
-      const { success, job, error } = jobData
-
-      if(success) {
-        const {status: jobStatus, output: jobOutput} = job
-        if(jobStatus === 'in queue') return ;
-        console.log(jobOutput)
-        clearInterval(intervalId)
-      } else {
-        toast.error(JSON.stringify(error))
-      }
-      
-    },1000)
-
-    console.log(data)
-  }
+  const handleRun = async () => {
+    setSkip(false);
+    setBottomDrawer("output");
+    setOutput("")
+    setStatus('in queue')
+    dispatch(asyncProgrammemRun({ currentCode, currentLang, userInput }) as any);
+  };
 
   return (
     <div className="flex">
@@ -92,8 +101,11 @@ function ProblemPage() {
             <div key={index}>
               <div className="my-6">
                 <h2 className="text-lg mb-2">Sample Input {index + 1}</h2>
-                <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg">
+                <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg relative">
                   {item.input}
+                  <button className="absolute top-0 right-0 font-mono text-xs bg-black text-white p-1 px-2 rounded hover:text-black hover:bg-white font-bold">
+                    COPY
+                  </button>
                 </p>
               </div>
               <div className="my-6">
@@ -128,7 +140,8 @@ function ProblemPage() {
             className={`${
               bottomDrawer === "output" && "bg-white shadow"
             } p-2 px-4 rounded-md`}
-            disabled
+            disabled={!output}
+            onClick={() => setBottomDrawer("output")}
           >
             Output
           </button>
@@ -141,20 +154,23 @@ function ProblemPage() {
             Code Result
           </button>
         </div>
-        <div className="bg-gray-100 flex-grow flex flex-col items-end p-4 pt-2">
-          {bottomDrawer !== "result" ? (
+        <div className="bg-gray-100 flex-grow flex flex-col items-end p-4 pt-2 min-h-[125px]">
+          {bottomDrawer === "input" ? (
             <textarea
               className="bg-white flex-grow w-full border outline-none p-2 text-sm font-bold rounded-sm shadow"
-              readOnly={bottomDrawer === "output"}
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
             ></textarea>
-          ) : (
+          ) : bottomDrawer === "result" ? (
             <div
               className={`bg-white flex-grow w-full border ${
                 verdict === "ac"
                   ? "border-green-600"
                   : verdict === "wa"
                   ? "border-red-600"
-                  : "border-red-800"
+                  : verdict === "tle"
+                  ? "border-red-800"
+                  : "border-slate-700"
               } outline-none p-2 text-xl grid place-items-center font-bold rounded-sm shadow`}
             >
               {verdict === "ac" && (
@@ -166,13 +182,36 @@ function ProblemPage() {
               {verdict === "tle" && (
                 <span className="text-red-800">TIME LIMIT EXCEEDED</span>
               )}
+              {verdict === "" && (
+                <span className="text-slate-800">SUBMIT YOUR CODE FIRST.</span>
+              )}
+            </div>
+          ) : (
+            <div className="w-full h-full bg-white rounded shadow">
+              {status === "in queue" ? (
+                <div className="w-full h-full flex flex-col items-center justify-center">
+                  <Loading size="xl" type="points-opacity" />
+                  <span className="font-mono mt-2 font-bold text-blue-600">
+                    Submission is in queue...
+                  </span>
+                </div>
+              ) : (
+                <textarea
+                  className="font-mono text-sm p-2 h-full w-full px-4 outline-none textarea"
+                  value={output}
+                  readOnly
+                ></textarea>
+              )}
             </div>
           )}
           <div className="space-x-4 text-sm mt-3">
-            <button className="p-2 shadow-md  px-8 border bg-white rounded-lg">
+            <button
+              className="p-2 shadow-md  px-8 border bg-white rounded-lg"
+              onClick={handleRun}
+            >
               Run
             </button>
-            <button className="p-2 shadow-md font-semibold px-8 border bg-slate-600 text-white rounded-lg" onClick={handleSubmit}>
+            <button className="p-2 shadow-md font-semibold px-8 border bg-slate-600 text-white rounded-lg">
               Submit
             </button>
           </div>
