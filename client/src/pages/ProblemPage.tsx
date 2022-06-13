@@ -1,5 +1,6 @@
 import MDEditor from "@uiw/react-md-editor";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Editor from "../components/Editor";
@@ -16,6 +17,8 @@ function ProblemPage() {
   );
   const location = useLocation().pathname.split("/")[2];
   const [sampleTestcase, setSampleTestcase] = useState<TestcaseType[]>([]);
+  const currentCode = useSelector((state: RootState) => state.code.currentCode)
+  const currentLang = useSelector((state: RootState) => state.code.currentLang)
 
   useEffect(() => {
     if (problem?.testcase) {
@@ -27,6 +30,37 @@ function ProblemPage() {
   useEffect(() => {
     dispatch(asyncSingleProblemGet(location) as any);
   }, []);
+
+  const handleSubmit = async () => {
+    const res = await fetch('http://localhost:5000/run', {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({code: currentCode, language: currentLang})
+    })
+    const data = await res.json()
+    const jobId = data.jobId
+
+    let intervalId = setInterval(async () => {
+      const jobRes = await fetch(`http://localhost:5000/status/${jobId}`)
+      const jobData = await jobRes.json()
+
+      const { success, job, error } = jobData
+
+      if(success) {
+        const {status: jobStatus, output: jobOutput} = job
+        if(jobStatus === 'in queue') return ;
+        console.log(jobOutput)
+        clearInterval(intervalId)
+      } else {
+        toast.error(JSON.stringify(error))
+      }
+      
+    },1000)
+
+    console.log(data)
+  }
 
   return (
     <div className="flex">
@@ -138,7 +172,7 @@ function ProblemPage() {
             <button className="p-2 shadow-md  px-8 border bg-white rounded-lg">
               Run
             </button>
-            <button className="p-2 shadow-md font-semibold px-8 border bg-slate-600 text-white rounded-lg">
+            <button className="p-2 shadow-md font-semibold px-8 border bg-slate-600 text-white rounded-lg" onClick={handleSubmit}>
               Submit
             </button>
           </div>

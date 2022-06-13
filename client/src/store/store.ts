@@ -1,9 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit'
+import CodeSlice from './CodeSlice'
 import ProblemSlice from './ProblemSlice'
 
 const store = configureStore({
     reducer: {
-        problem: ProblemSlice
+        problem: ProblemSlice,
+        code: CodeSlice
     }
 })
 

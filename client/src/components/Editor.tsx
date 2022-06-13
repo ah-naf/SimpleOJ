@@ -7,11 +7,14 @@ import "codemirror/addon/edit/closetag";
 import "codemirror/addon/edit/closebrackets";
 import "codemirror/lib/codemirror.css";
 import stub from "../codeStub";
+import { useDispatch } from "react-redux";
+import { setCurrentCode, setCurrentLang } from "../store/CodeSlice";
 
 export default function Editor() {
   const EditorRef = useRef<EditorFromTextArea>();
   const [language, setLanguage] = useState("cpp");
   const [stubs, setStubs] = useState(stub);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const localLanguage = localStorage.getItem("language");
@@ -30,6 +33,8 @@ export default function Editor() {
     const temp = { ...stubs };
     temp[curLang] = localCode || (stub[curLang] as string);
     setStubs(temp);
+    dispatch(setCurrentCode(temp[curLang]));
+    dispatch(setCurrentLang(curLang));
   }, []);
 
   useEffect(() => {
@@ -48,12 +53,14 @@ export default function Editor() {
             ? "text/x-csrc"
             : "text/x-python",
         theme: "idea",
-        autoCloseTags: true,
         autoCloseBrackets: true,
         lineNumbers: true,
+        tabSize: 2,
+        tabindex: 2,
+        indentWithTabs: true,
       });
 
-      // Get initial code from localstorage if it exist or use the default stub code 
+      // Get initial code from localstorage if it exist or use the default stub code
 
       const tempLang = localStorage.getItem("language") || language;
       const tempStub =
@@ -70,12 +77,13 @@ export default function Editor() {
       EditorRef.current?.on("change", (instance, changes) => {
         const code = instance.getValue();
         if (changes.origin !== "setValue") {
-          const tempLang = localStorage.getItem('language') || 'cpp';
+          dispatch(setCurrentCode(code));
+          const tempLang = localStorage.getItem("language") || "cpp";
           localStorage.setItem(`${tempLang}-code`, JSON.stringify(code));
         }
       });
     }
-  }, [language, stubs]);
+  }, [language, stubs, dispatch]);
 
   return (
     <>
@@ -91,6 +99,8 @@ export default function Editor() {
               ) || stubs[e.target.value];
 
             EditorRef.current?.getDoc().setValue(curStub);
+            dispatch(setCurrentCode(curStub));
+            dispatch(setCurrentLang(e.target.value));
           }}
           className="p-2 text-xs pr-4 rounded-md font-bold bg-transparent border border-gray-300"
         >
