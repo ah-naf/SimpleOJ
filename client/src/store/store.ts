@@ -9,6 +9,9 @@ const store = configureStore({
     code: CodeSlice,
     [problemStatusApi.reducerPath]: problemStatusApi.reducer,
   },
+  // TODO: uncomment devTools: false before deployment
+  // devTools: false,
+  
   // adding the api middleware enables caching, invalidation, polling and other features of `rtk-query`
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(problemStatusApi.middleware),

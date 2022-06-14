@@ -14,6 +14,9 @@ const JobSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  userInput: {
+    type: String
+  },
   startedAt: {
     type: Date,
   },
@@ -28,6 +31,9 @@ const JobSchema = new mongoose.Schema({
   output: {
     type: String,
   },
+  verdict: {
+    type: String
+  }
 });
 
 module.exports = mongoose.model("Job", JobSchema);

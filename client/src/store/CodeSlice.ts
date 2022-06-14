@@ -36,6 +36,40 @@ export const asyncProgrammemRun = createAsyncThunk(
   }
 );
 
+export const asyncProgrammemSubmit = createAsyncThunk(
+  "code/submitProgramme",
+  async ({
+    currentCode,
+    currentLang,
+    userInput,
+    problemId,
+  }: {
+    currentCode: string;
+    currentLang: string;
+    userInput: string;
+    problemId: string;
+  }) => {
+    const res = await fetch("http://localhost:5000/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        code: currentCode,
+        language: currentLang,
+        userInput,
+        problemId,
+      }),
+    });
+    const data = await res.json();
+
+    if (res.ok) return data.jobId;
+    else {
+      toast.error(data);
+    }
+  }
+);
+
 export const CodeSlice = createSlice({
   name: "Code",
   initialState,
@@ -59,7 +93,14 @@ export const CodeSlice = createSlice({
     },
     [asyncProgrammemRun.fulfilled.type]: (state, action) => {
       state.codeLoading = false;
-      state.jobId = action.payload
+      state.jobId = action.payload;
+    },
+    [asyncProgrammemSubmit.pending.type]: (state) => {
+      state.codeLoading = true;
+    },
+    [asyncProgrammemSubmit.fulfilled.type]: (state, action) => {
+      state.codeLoading = false;
+      state.jobId = action.payload;
     },
   },
 });

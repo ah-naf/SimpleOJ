@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import Editor from "../components/Editor";
-import { asyncProgrammemRun } from "../store/CodeSlice";
+import { asyncProgrammemRun, asyncProgrammemSubmit } from "../store/CodeSlice";
 import { asyncSingleProblemGet } from "../store/ProblemSlice";
 import { useGetProblemStatusQuery } from "../store/services/ProblemStatus";
 import { RootState } from "../store/store";
@@ -27,11 +27,11 @@ function ProblemPage() {
   const JobId = useSelector((state: RootState) => state.code.jobId);
   const [skip, setSkip] = useState(false);
   const [userInput, setUserInput] = useState("");
-  const [jobId, setJobId] = useState("")
+  const [jobId, setJobId] = useState("");
 
   useEffect(() => {
-    setJobId(JobId)
-  }, [JobId])
+    setJobId(JobId);
+  }, [JobId]);
 
   // Status polling
   const problemData = useGetProblemStatusQuery(
@@ -46,10 +46,14 @@ function ProblemPage() {
         setSkip(true);
         setStatus(data.job.status);
         setOutput(data.job.output);
-        console.log(data.job)
+        if (data.job.verdict) {
+          setBottomDrawer("result");
+          setVerdict(data.job.verdict);
+          setOutput("")
+        }
       }
     }
-    console.log(problemData.data)
+    console.log(problemData.data);
   }, [problemData.data]);
 
   useEffect(() => {
@@ -66,9 +70,38 @@ function ProblemPage() {
   const handleRun = async () => {
     setSkip(false);
     setBottomDrawer("output");
-    setOutput("")
-    setStatus('in queue')
-    dispatch(asyncProgrammemRun({ currentCode, currentLang, userInput }) as any);
+    setOutput("");
+    setStatus("in queue");
+    dispatch(
+      asyncProgrammemRun({ currentCode, currentLang, userInput }) as any
+    );
+  };
+
+  const handleSubmit = async () => {
+    setSkip(false);
+    setBottomDrawer("output");
+    setOutput("");
+    setStatus("in queue");
+    setVerdict("");
+    dispatch(
+      asyncProgrammemSubmit({
+        currentCode,
+        currentLang,
+        userInput,
+        problemId: problem?._id as string,
+      }) as any
+    );
+  };
+
+  const copyUserInput = async (input: string) => {
+    try {
+      await navigator.clipboard.writeText(input);
+      toast.success("Input Copied successfully");
+      // console.log(codeRef)
+    } catch (error) {
+      console.log(error);
+      toast.error("Something wrong happened");
+    }
   };
 
   return (
@@ -103,7 +136,10 @@ function ProblemPage() {
                 <h2 className="text-lg mb-2">Sample Input {index + 1}</h2>
                 <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg relative">
                   {item.input}
-                  <button className="absolute top-0 right-0 font-mono text-xs bg-black text-white p-1 px-2 rounded hover:text-black hover:bg-white font-bold">
+                  <button
+                    className="absolute top-0 right-0 font-mono text-xs bg-transparent text-black border border-black p-1 px-2 rounded hover:text-black hover:bg-white font-bold"
+                    onClick={() => copyUserInput(item.input)}
+                  >
                     COPY
                   </button>
                 </p>
@@ -157,7 +193,7 @@ function ProblemPage() {
         <div className="bg-gray-100 flex-grow flex flex-col items-end p-4 pt-2 min-h-[125px]">
           {bottomDrawer === "input" ? (
             <textarea
-              className="bg-white flex-grow w-full border outline-none p-2 text-sm font-bold rounded-sm shadow"
+              className="bg-white flex-grow w-full border outline-none p-2 text-xs font-bold rounded-sm shadow"
               value={userInput}
               onChange={(e) => setUserInput(e.target.value)}
             ></textarea>
@@ -211,7 +247,10 @@ function ProblemPage() {
             >
               Run
             </button>
-            <button className="p-2 shadow-md font-semibold px-8 border bg-slate-600 text-white rounded-lg">
+            <button
+              className="p-2 shadow-md font-semibold px-8 border bg-slate-600 text-white rounded-lg"
+              onClick={handleSubmit}
+            >
               Submit
             </button>
           </div>

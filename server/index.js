@@ -3,12 +3,11 @@ const dotenv = require("dotenv");
 const mongoose = require("mongoose");
 dotenv.config();
 const { generateFile } = require("./generateFile");
-const { executeCpp } = require("./executeCpp");
-const { executePy } = require("./executePy");
 const cors = require("cors");
 const app = express();
 const Problem = require("./models/Problem");
 const Job = require("./models/Job");
+const { addJobToQueue, addSubmitToQueue } = require("./jobQueue");
 
 app.use(express.json());
 app.use(cors());
@@ -31,34 +30,40 @@ app.post("/run", async (req, res) => {
     return res.status(400).json({ success: false, error: "Empty code body!" });
   }
 
-  let output;
   let job;
-
   try {
     // need to generate a c++ file with content from the request
     const filepath = await generateFile(language, code);
 
-    job = await Job({ language, filepath }).save();
+    job = await Job({ language, filepath, userInput }).save();
     const jobId = job["_id"];
+    addJobToQueue(jobId);
 
     res.status(201).json({ sueccess: true, jobId });
-
-    job["startedAt"] = new Date();
-    // we need to run the file and send the response
-    if (language === "cpp" || language === "c")
-      output = await executeCpp(filepath, userInput);
-    else output = await executePy(filepath, userInput);
-
-    job["completedAt"] = new Date();
-    job["status"] = "success";
-    job["output"] = output;
-
-    await job.save();
   } catch (err) {
-    job["completedAt"] = new Date();
-    job["status"] = "error";
-    job["output"] = err;
-    await job.save();
+    return res.status(500).json(err);
+  }
+});
+
+app.post("/submit", async (req, res) => {
+  let { language = "cpp", code, userInput, problemId } = req.body;
+
+  if (code === undefined || !code) {
+    return res.status(400).json({ success: false, error: "Empty code body!" });
+  }
+
+  let job;
+  try {
+    // need to generate a c++ file with content from the request
+    const filepath = await generateFile(language, code);
+
+    job = await Job({ language, filepath, userInput }).save();
+    const jobId = job["_id"];
+    addSubmitToQueue(jobId, problemId);
+
+    res.status(201).json({ sueccess: true, jobId });
+  } catch (err) {
+    return res.status(500).json(err);
   }
 });
 
