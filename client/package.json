@@ -14,6 +14,7 @@
     "@types/react-dom": "^18.0.5",
     "@uiw/react-md-editor": "^3.14.1",
     "codemirror": "^5.65.5",
+    "firebase": "^9.8.3",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-hot-toast": "^2.2.0",

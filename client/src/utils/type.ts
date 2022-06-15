@@ -21,3 +21,10 @@ export interface ProblemType extends PropblemDetailType {
     createdAt: string
     _id: string
 }
+
+export interface UserType {
+    _id: string,
+    googleId: string,
+    displayName: string,
+    image: string
+}

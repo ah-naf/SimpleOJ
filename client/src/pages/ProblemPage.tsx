@@ -28,6 +28,7 @@ function ProblemPage() {
   const [skip, setSkip] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [jobId, setJobId] = useState("");
+  const user = useSelector((state: RootState) => state.auth.user)
 
   useEffect(() => {
     setJobId(JobId);
@@ -78,6 +79,10 @@ function ProblemPage() {
   };
 
   const handleSubmit = async () => {
+    if(!user) {
+      toast.error('Please sign in to submit code')
+      return
+    }
     setSkip(false);
     setBottomDrawer("output");
     setOutput("");
@@ -89,6 +94,7 @@ function ProblemPage() {
         currentLang,
         userInput,
         problemId: problem?._id as string,
+        userId: user._id
       }) as any
     );
   };

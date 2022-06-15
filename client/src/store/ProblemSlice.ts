@@ -20,6 +20,7 @@ export const asyncProblemAdd = createAsyncThunk(
   }) => {
     const res = await fetch("http://localhost:5000/add", {
       method: "POST",
+      credentials: 'include',
       headers: {
         "Content-Type": "application/json",
       },
@@ -37,7 +38,9 @@ export const asyncProblemAdd = createAsyncThunk(
 export const asyncProblemGet = createAsyncThunk(
   "problem/getProblem",
   async () => {
-    const res = await fetch("http://localhost:5000/problems");
+    const res = await fetch("http://localhost:5000/problems", {
+      credentials: 'include'
+    });
     const data = await res.json();
     if (res.ok) {
       return data;

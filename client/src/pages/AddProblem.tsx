@@ -10,6 +10,7 @@ import { asyncProblemAdd } from "../store/ProblemSlice";
 import { RootState } from "../store/store";
 
 export default function AddProblem() {
+  const user = useSelector((state: RootState) => state.auth.user);
   const [problemDetail, setProblemDetail] = useState({
     slug: "",
     title: "",
@@ -25,7 +26,23 @@ export default function AddProblem() {
 
 
   const handleAdd = async () => {
-    dispatch(asyncProblemAdd({ detail: problemDetail, testcase }) as any);
+    if (!user) {
+      toast.error("Sign in to add problem");
+      return;
+    }
+    if (testcase.length === 0) {
+      toast.error("You have to add testcase");
+      return;
+    }
+    let sample = 0,
+      notSample = 0;
+    testcase.forEach((item) => {
+      if (item.sample) sample++;
+      else notSample++;
+    });
+    if (sample && notSample)
+      dispatch(asyncProblemAdd({ detail: problemDetail, testcase }) as any);
+    else toast.error("You have to add at least one custom and sample testcase");
   };
 
   return (

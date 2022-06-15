@@ -69,6 +69,7 @@ submitQueue.process(async ({ data }) => {
   try {
     let output;
     job["startedAt"] = new Date();
+    job['userId'] = data.userId
     // we need to run the file and send the response
     const checkTestcase = await Promise.all(
       testcases.map(async (item) => {
@@ -78,7 +79,6 @@ submitQueue.process(async ({ data }) => {
         else output = await executePy(job.filepath, item.input);
         const end = moment(new Date());
         const executionTime = end.diff(start, "seconds", true);
-        // console.log(executionTime);
         if (executionTime > problem.timelimit) {
           job["verdict"] = "tle";
           return false;
@@ -111,10 +111,11 @@ submitQueue.on("failed", (error) => {
   console.error(error.data.id, error.failedReason);
 });
 
-const addSubmitToQueue = async (jobId, problemId) => {
+const addSubmitToQueue = async (jobId, problemId, userId) => {
   submitQueue.add({
     id: jobId,
     problemId,
+    userId
   });
 };
 

@@ -1,19 +1,41 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const passport = require("passport");
 const mongoose = require("mongoose");
 dotenv.config();
+const MongoStore = require("connect-mongo");
 const { generateFile } = require("./generateFile");
 const cors = require("cors");
 const app = express();
 const Problem = require("./models/Problem");
 const Job = require("./models/Job");
 const { addJobToQueue, addSubmitToQueue } = require("./jobQueue");
+const session = require("express-session");
+
+require("./config/passport")(passport);
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
+
+app.use(
+  session({
+    secret: "some random secret",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 mongoose.connect(
-  "mongodb+srv://ahnaf:8880@cluster0.ma2wh.mongodb.net/simpleoj?retryWrites=true&w=majority",
+  process.env.MONGO_URI,
   {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -45,8 +67,8 @@ app.post("/run", async (req, res) => {
   }
 });
 
-app.post("/submit", async (req, res) => {
-  let { language = "cpp", code, userInput, problemId } = req.body;
+app.post("/submit",verify, async (req, res) => {
+  let { language = "cpp", code, userInput, problemId, userId } = req.body;
 
   if (code === undefined || !code) {
     return res.status(400).json({ success: false, error: "Empty code body!" });
@@ -59,7 +81,7 @@ app.post("/submit", async (req, res) => {
 
     job = await Job({ language, filepath, userInput }).save();
     const jobId = job["_id"];
-    addSubmitToQueue(jobId, problemId);
+    addSubmitToQueue(jobId, problemId, userId);
 
     res.status(201).json({ sueccess: true, jobId });
   } catch (err) {
@@ -75,9 +97,9 @@ app.get("/status/:id", async (req, res) => {
   try {
     const job = await Job.findById(req.params.id);
 
-    res.status(200).json({job, success: true});
+    res.status(200).json({ job, success: true });
   } catch (error) {
-    res.status(500).json({error, success: false});
+    res.status(500).json({ error, success: false });
   }
 });
 
@@ -121,6 +143,34 @@ app.get("/problems/:id", async (req, res) => {
   }
 });
 
+// Auth related
+app.get("/google", passport.authenticate("google", { scope: ["profile"] }));
+
+app.get(
+  "/auth/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/failed",
+  }),
+  (req, res) => {
+    res.redirect("http://localhost:3000/");
+  }
+);
+
+app.get("/success", (req, res) => {
+  res.status(200).json(req.user);
+});
+
+app.get("/logout", (req, res) => {
+  req.logout(err => {
+    return res.status(200).json({})
+  })
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => console.log("Server is listening"));
+
+function verify(req, res, next) {
+  if(req.isAuthenticated()) return next()
+  else return res.status(403).json("You are not authenticated")
+}

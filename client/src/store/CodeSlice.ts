@@ -22,10 +22,15 @@ export const asyncProgrammemRun = createAsyncThunk(
   }) => {
     const res = await fetch("http://localhost:5000/run", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ code: currentCode, language: currentLang, userInput }),
+      body: JSON.stringify({
+        code: currentCode,
+        language: currentLang,
+        userInput,
+      }),
     });
     const data = await res.json();
     
@@ -43,14 +48,17 @@ export const asyncProgrammemSubmit = createAsyncThunk(
     currentLang,
     userInput,
     problemId,
+    userId,
   }: {
     currentCode: string;
     currentLang: string;
     userInput: string;
     problemId: string;
+    userId: string;
   }) => {
     const res = await fetch("http://localhost:5000/submit", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -59,6 +67,7 @@ export const asyncProgrammemSubmit = createAsyncThunk(
         language: currentLang,
         userInput,
         problemId,
+        userId,
       }),
     });
     const data = await res.json();

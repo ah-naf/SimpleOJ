@@ -25,7 +25,7 @@ export default function Home() {
           </div>
         </div>
       </div>
-      <footer>
+      <footer className="fixed bottom-0 left-0">
         <p className="text-xs m-0">
           Made By <a href="https://github.com/ah-naf">Ahnaf</a>
         </p>
