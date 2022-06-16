@@ -1,13 +1,17 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+import { UserSubmissionType } from "../utils/type";
 
 const initialState: InitialStateType = {
   currentCode: "",
   currentLang: "",
   codeLoading: false,
   codeOutput: "",
-  jobId: ""
+  jobId: "",
+  userSubmission: []
 };
+
+const URL = 'http://localhost:5000/api'
 
 export const asyncProgrammemRun = createAsyncThunk(
   "code/runProgramme",
@@ -20,7 +24,7 @@ export const asyncProgrammemRun = createAsyncThunk(
     currentLang: string;
     userInput: string
   }) => {
-    const res = await fetch("http://localhost:5000/run", {
+    const res = await fetch(`${URL}/code/run`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -56,7 +60,7 @@ export const asyncProgrammemSubmit = createAsyncThunk(
     problemId: string;
     userId: string;
   }) => {
-    const res = await fetch("http://localhost:5000/submit", {
+    const res = await fetch(`${URL}/code/submit`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -79,6 +83,15 @@ export const asyncProgrammemSubmit = createAsyncThunk(
   }
 );
 
+export const asyncSubmissionGet = createAsyncThunk('code/getSubmission', async (userId: string) => {
+  const res = await fetch(`${URL}/code/submission/${userId}`, {
+    credentials: 'include'
+  })
+  const data = await res.json()
+  if(res.ok) return data
+  else toast.error(data)
+})
+
 export const CodeSlice = createSlice({
   name: "Code",
   initialState,
@@ -94,7 +107,7 @@ export const CodeSlice = createSlice({
       action: PayloadAction<string>
     ) => {
       state.currentLang = action.payload;
-    },
+    }
   },
   extraReducers: {
     [asyncProgrammemRun.pending.type]: (state) => {
@@ -111,6 +124,9 @@ export const CodeSlice = createSlice({
       state.codeLoading = false;
       state.jobId = action.payload;
     },
+    [asyncSubmissionGet.fulfilled.type]: (state, action) => {
+      state.userSubmission = action.payload;
+    },
   },
 });
 
@@ -124,4 +140,5 @@ interface InitialStateType {
   codeLoading: boolean;
   codeOutput: string
   jobId: string
+  userSubmission: UserSubmissionType[],
 }

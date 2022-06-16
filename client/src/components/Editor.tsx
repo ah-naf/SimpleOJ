@@ -61,13 +61,13 @@ export default function Editor() {
         tabindex: 2,
         indentWithTabs: true,
       });
-
       // Get initial code from localstorage if it exist or use the default stub code
 
       const tempLang = localStorage.getItem("language") || language;
       const tempStub =
-        JSON.parse(localStorage.getItem(`${location}-${tempLang}-code`) as string) ||
-        stub[tempLang];
+        JSON.parse(
+          localStorage.getItem(`${location}-${tempLang}-code`) as string
+        ) || stub[tempLang];
 
       EditorRef.current?.getDoc().setValue(tempStub);
     };
@@ -81,11 +81,15 @@ export default function Editor() {
         if (changes.origin !== "setValue") {
           dispatch(setCurrentCode(code));
           const tempLang = localStorage.getItem("language") || "cpp";
-          localStorage.setItem(`${location}-${tempLang}-code`, JSON.stringify(code));
+          localStorage.setItem(
+            `${location}-${tempLang}-code`,
+            JSON.stringify(code)
+          );
         }
       });
     }
-  }, [language, stubs, dispatch, location]);
+    
+  }, [language, stubs]);
 
   return (
     <>

@@ -28,3 +28,12 @@ export interface UserType {
     displayName: string,
     image: string
 }
+
+export interface UserSubmissionType {
+    language: string,
+    filepath: string,
+    startedAt: string,
+    completedAt: string
+    verdict: string
+    submittedAt: string
+}

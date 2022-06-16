@@ -10,7 +10,7 @@ export default function Navbar() {
   const dispatch = useDispatch()
 
   const handleLogin = async () => {
-    window.open("http://localhost:5000/google", "_self");
+    window.open("http://localhost:5000/api/auth/google", "_self");
   };
   const handleLogout = () => {
     dispatch(asyncLogout() as any)

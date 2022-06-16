@@ -9,6 +9,8 @@ const initialState: InitialStateType = {
   singleProblem: undefined
 };
 
+const URL = 'http://localhost:5000/api'
+
 export const asyncProblemAdd = createAsyncThunk(
   "problem/addProblem",
   async ({
@@ -18,7 +20,7 @@ export const asyncProblemAdd = createAsyncThunk(
     detail: PropblemDetailType;
     testcase: TestcaseType[];
   }) => {
-    const res = await fetch("http://localhost:5000/add", {
+    const res = await fetch(`${URL}/problem/add`, {
       method: "POST",
       credentials: 'include',
       headers: {
@@ -38,7 +40,7 @@ export const asyncProblemAdd = createAsyncThunk(
 export const asyncProblemGet = createAsyncThunk(
   "problem/getProblem",
   async () => {
-    const res = await fetch("http://localhost:5000/problems", {
+    const res = await fetch(`${URL}/problem/`, {
       credentials: 'include'
     });
     const data = await res.json();
@@ -51,7 +53,7 @@ export const asyncProblemGet = createAsyncThunk(
 export const asyncSingleProblemGet = createAsyncThunk(
   "problem/getSingleProblem",
   async (id: string) => {
-    const res = await fetch("http://localhost:5000/problems/"+id);
+    const res = await fetch(`${URL}/problem/`+id);
     const data = await res.json();
     if (res.ok) {
       return data;
