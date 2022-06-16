@@ -54,7 +54,7 @@ export default function ProblemEditor() {
     }
   }, [problemData.data]);
 
-  
+
 
   const handleRun = async () => {
     setSkip(false);
@@ -89,7 +89,7 @@ export default function ProblemEditor() {
 
   return (
     <div className="min-w-[45%] border problemPage border-r-0 pr-0 pb-0 p-3 flex flex-col overflow-hidden">
-      {drawer === "description" || !drawer ? (
+      {(drawer === "description" || !drawer) && (
         <>
           <div className="">
             <Editor />
@@ -189,8 +189,6 @@ export default function ProblemEditor() {
             </div>
           </div>
         </>
-      ) : (
-        <textarea readOnly className="h-full w-full font-mono"></textarea>
       )}
     </div>
   );

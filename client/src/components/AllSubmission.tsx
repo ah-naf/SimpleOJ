@@ -8,10 +8,11 @@ export default function AllSubmission() {
   const user = useSelector((state: RootState) => state.auth.user); 
   const dispatch = useDispatch()
   const userSubmission = useSelector((state: RootState) => state.code.userSubmission)
+  const problem = useSelector((state: RootState) => state.problem.singleProblem)
 
   useEffect(() => {
-    if(user) dispatch(asyncSubmissionGet(user?._id) as any)
-  }, [user])
+    if(user && problem) dispatch(asyncSubmissionGet(problem?._id) as any)
+  }, [user, problem])
 
   if (!user)
     return (
@@ -21,9 +22,9 @@ export default function AllSubmission() {
     );
 
   return (
-    <div>
+    <div className="max-w-5xl m-auto">
       <h3 className="text-gray-600 mb-4">{user.displayName+"'s"} Submission</h3>
-      <table className="table-auto w-full border shadow rounded">
+      {userSubmission.length ? <table className="table-auto w-full border shadow rounded">
         <thead>
           <tr className="h-12 text-lg font-sans">
             <td className="pl-3 border">Time Submitted</td>
@@ -35,7 +36,7 @@ export default function AllSubmission() {
         <tbody>
           {userSubmission.map((item, index) => <SingleSubmissionRow key={index} submission={item} />)}
         </tbody>
-      </table>
+      </table> : <div><p className="font-mono text-lg">No Previous Submission Found.</p></div>}
     </div>
   );
 }

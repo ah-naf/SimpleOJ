@@ -16,7 +16,7 @@ export default function Navbar() {
     dispatch(asyncLogout() as any)
   }
   return (
-    <div className="w-screen relative py-2">
+    <div className="w-screen relative py-2 z-50">
       <div className="flex items-center font-mono h-full px-12 justify-between z-50">
         <h1 className="text-3xl font-black text-slate-200 z-50">
           <Link to={"/"} className="text-inherit">

@@ -34,7 +34,8 @@ const JobSchema = new mongoose.Schema({
   verdict: {
     type: String
   },
-  userId: {type: String}
+  userId: {type: String},
+  problemId: {type: String}
 });
 
 module.exports = mongoose.model("Job", JobSchema);

@@ -25,7 +25,7 @@ router.post("/run", async (req, res) => {
     res.status(201).json({ sueccess: true, jobId });
   } catch (err) {
     return res.status(500).json(err);
-  }
+  } 
 });
 
 router.post("/submit", verify, async (req, res) => {
@@ -66,16 +66,21 @@ router.get("/status/:id", async (req, res) => {
 
 // Get All Submission
 // TODO: add verify middleware
-router.get('/submission/:id', async (req, res) => {
-  const userId = req.params.id
-  if(!userId) return res.status(400).json("Missing required fields.")
+router.get("/submission/:id", verify, async (req, res) => {
+  const userId = req.user._id;
+  const problemId = req.params.id;
+  if (!userId) return res.status(400).json("Missing required fields.");
 
   try {
-    const submissions = await Job.find({userId, verdict: {$exists: true}}).sort({submittedAt: -1})
-    res.status(200).json(submissions)
+    const submissions = await Job.find({
+      userId,
+      problemId,
+      verdict: { $exists: true },
+    }).sort({ submittedAt: -1 });
+    res.status(200).json(submissions);
   } catch (error) {
-    return res.status(500).json(error)
+    return res.status(500).json(error);
   }
-})
+});
 
 module.exports = router;

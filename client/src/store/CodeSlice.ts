@@ -83,8 +83,8 @@ export const asyncProgrammemSubmit = createAsyncThunk(
   }
 );
 
-export const asyncSubmissionGet = createAsyncThunk('code/getSubmission', async (userId: string) => {
-  const res = await fetch(`${URL}/code/submission/${userId}`, {
+export const asyncSubmissionGet = createAsyncThunk('code/getSubmission', async (problemId: string) => {
+  const res = await fetch(`${URL}/code/submission/${problemId}`, {
     credentials: 'include'
   })
   const data = await res.json()

@@ -70,6 +70,7 @@ submitQueue.process(async ({ data }) => {
     let output;
     job["startedAt"] = new Date();
     job['userId'] = data.userId
+    job['problemId'] = problemId
     // we need to run the file and send the response
     const checkTestcase = await Promise.all(
       testcases.map(async (item) => {

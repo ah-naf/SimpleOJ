@@ -25,28 +25,33 @@ function ProblemPage() {
 
   return (
     <div className="flex">
-      <div className="flex-grow h-screen overflow-y-auto sc1 problemPage pb-2">
-        <div className="flex items-center font-mono font-bold justify-around">
+      <div className="flex-grow h-screen overflow-y-auto sc1 problemPage pb-2 relative">
+        <div className="flex items-center font-mono font-bold justify-around fixed top-0 z-20 bg-[whitesmoke] shadow  h-full flex-col w-10">
           <button
-            className={`w-full py-2 ${
-              drawer === "submission" && "shadow bg-[whitesmoke] rounded"
+            className={`h-1/2 w-full relative py-2 ${
+              drawer === "submission" && "shadow bg-gray-300 rounded "
             }`}
             // onClick={() => dispatch(setDrawer("description"))}
             onClick={() => navigate(`/problem/${location}?drawer=description`)}
           >
-            <span>Description</span>
+            <span className="absolute -rotate-90 font-bold font-sans left-1/2 -translate-x-1/2">
+              Description
+            </span>
           </button>
           <button
-            className={`w-full py-2 ${
-              (drawer === "description" || !drawer) && "shadow bg-[whitesmoke] rounded"
+            className={`h-1/2 w-full relative py-2 ${
+              (drawer === "description" || !drawer) &&
+              "shadow bg-gray-300 rounded"
             }`}
             // onClick={() => dispatch(setDrawer("submission"))}
             onClick={() => navigate(`/problem/${location}?drawer=submission`)}
           >
-            <span>Submission</span>
+            <span className="absolute font-bold -rotate-90 font-sans left-1/2 -translate-x-1/2">
+              Submission
+            </span>
           </button>
         </div>
-        <div className="px-5 mt-4">
+        <div className="px-4 pl-16 mt-4">
           {drawer === "description" || !drawer ? (
             <ProblemStatement />
           ) : (
@@ -54,7 +59,7 @@ function ProblemPage() {
           )}
         </div>
       </div>
-      <ProblemEditor />
+      {(drawer === "description" || !drawer) && <ProblemEditor />}
     </div>
   );
 }
