@@ -1,7 +1,10 @@
-#include <iostream>
-#include <stdio.h>
-using namespace std;
-int main() {
-  int n; cin>>n;
-	cout<<n<<endl;
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot GET /code/download/123</pre>
+</body>
+</html>
