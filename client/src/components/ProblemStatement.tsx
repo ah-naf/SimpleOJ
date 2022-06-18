@@ -10,6 +10,7 @@ export default function ProblemStatement() {
     (state: RootState) => state.problem.singleProblem
   );
   const [sampleTestcase, setSampleTestcase] = useState<TestcaseType[]>([]);
+  const loading = useSelector((state: RootState) => state.problem.loading);
 
   useEffect(() => {
     if (problem?.testcase) {
@@ -30,58 +31,88 @@ export default function ProblemStatement() {
   };
 
   return (
-    <>
-      <h1 className="text-3xl py-3 border-b capitalize mb-8 text-center">
-        {problem?.title}
-      </h1>
-      <MDEditor.Markdown source={problem?.statement} />
-      {problem?.input && (
-        <div className="my-6">
-          <h2 className="text-lg mb-2">Input Format</h2>
-          <MDEditor.Markdown source={problem?.input} />
-        </div>
-      )}
-      {problem?.output && (
-        <div className="my-6">
-          <h2 className="text-lg mb-2">Output Format</h2>
-          <MDEditor.Markdown source={problem?.output} />
-        </div>
-      )}
-      {problem?.constraints && (
-        <div className="my-6">
-          <h2 className="text-lg mb-2">Constraints</h2>
-          <MDEditor.Markdown source={problem?.constraints} />
-        </div>
-      )}
-      {sampleTestcase &&
-        sampleTestcase.map((item, index) => (
-          <div key={index}>
+    <div>
+      {!loading ? (
+        <>
+          <h1 className="text-3xl py-3 border-b capitalize mb-8 text-center">
+            {problem?.title}
+          </h1>
+          <MDEditor.Markdown source={problem?.statement} />
+          {problem?.input && (
             <div className="my-6">
-              <h2 className="text-lg mb-2">Sample Input {index + 1}</h2>
-              <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg relative">
-                {item.input}
-                <button
-                  className="absolute top-0 right-0 font-mono text-xs bg-transparent text-black border border-black p-1 px-2 rounded hover:text-black hover:bg-white font-bold"
-                  onClick={() => copyUserInput(item.input)}
-                >
-                  COPY
-                </button>
-              </p>
+              <h2 className="text-lg mb-2">Input Format</h2>
+              <MDEditor.Markdown source={problem?.input} />
             </div>
+          )}
+          {problem?.output && (
             <div className="my-6">
-              <h2 className="text-lg mb-2">Sample Output {index + 1}</h2>
-              <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg">
-                {item.output}
-              </p>
+              <h2 className="text-lg mb-2">Output Format</h2>
+              <MDEditor.Markdown source={problem?.output} />
             </div>
-            {item.explanation && (
-              <div className="my-6">
-                <h2 className="text-lg mb-2">Explanation</h2>
-                <MDEditor.Markdown source={item.explanation} />
+          )}
+          {problem?.constraints && (
+            <div className="my-6">
+              <h2 className="text-lg mb-2">Constraints</h2>
+              <MDEditor.Markdown source={problem?.constraints} />
+            </div>
+          )}
+          {sampleTestcase &&
+            sampleTestcase.map((item, index) => (
+              <div key={index}>
+                <div className="my-6">
+                  <h2 className="text-lg mb-2">Sample Input {index + 1}</h2>
+                  <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg relative">
+                    {item.input}
+                    <button
+                      className="absolute top-0 right-0 font-mono text-xs bg-transparent text-black border border-black p-1 px-2 rounded hover:text-black hover:bg-white font-bold"
+                      onClick={() => copyUserInput(item.input)}
+                    >
+                      COPY
+                    </button>
+                  </p>
+                </div>
+                <div className="my-6">
+                  <h2 className="text-lg mb-2">Sample Output {index + 1}</h2>
+                  <p className="whitespace-pre-wrap bg-slate-300 p-4 rounded font-mono text-lg">
+                    {item.output}
+                  </p>
+                </div>
+                {item.explanation && (
+                  <div className="my-6">
+                    <h2 className="text-lg mb-2">Explanation</h2>
+                    <MDEditor.Markdown source={item.explanation} />
+                  </div>
+                )}
               </div>
-            )}
+            ))}
+        </>
+      ) : (
+        <div className="rounded-md p-4 max-w-[90%] w-full mx-auto">
+          <div className="animate-pulse flex space-x-4">
+            <div className="flex-1 space-y-6 py-1">
+              <div className="h-2 bg-slate-700 rounded w-4/5 m-auto"></div>
+              {[0, 1, 2, 3].map((item) => (
+                <div key={item} className="space-y-8">
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                      <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                    </div>
+                    <div className="h-2 bg-slate-700 rounded"></div>
+                  </div>
+                  <div className="space-y-3">
+                    <div className="h-2 bg-slate-700 rounded"></div>
+                    <div className="grid grid-cols-3 gap-4">
+                      <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                      <div className="h-2 bg-slate-700 rounded col-span-2"></div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-    </>
+        </div>
+      )}
+    </div>
   );
 }

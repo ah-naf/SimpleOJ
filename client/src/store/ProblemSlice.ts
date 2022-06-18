@@ -91,11 +91,25 @@ export const ProblemSlice = createSlice({
     [asyncProblemAdd.rejected.type]: (state) => {
       state.loading = false;
     },
+    [asyncProblemGet.pending.type]: (state, {payload}) => {
+      state.loading = true
+    },
     [asyncProblemGet.fulfilled.type]: (state, {payload}) => {
+      state.loading = false
       state.problems = payload
     },
+    [asyncProblemGet.rejected.type]: (state, {payload}) => {
+      state.loading = false
+    },
+    [asyncSingleProblemGet.pending.type]: (state, {payload}) => {
+      state.loading = true
+    },
     [asyncSingleProblemGet.fulfilled.type]: (state, {payload}) => {
+      state.loading = false
       state.singleProblem = payload
+    },
+    [asyncSingleProblemGet.rejected.type]: (state, {payload}) => {
+      state.loading = false
     },
   },
 });

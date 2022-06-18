@@ -8,7 +8,8 @@ const initialState: InitialStateType = {
   codeLoading: false,
   codeOutput: "",
   jobId: "",
-  userSubmission: []
+  userSubmission: [],
+  loading: false
 };
 
 const URL = 'http://localhost:5000/api'
@@ -128,8 +129,15 @@ export const CodeSlice = createSlice({
       state.codeLoading = false;
       state.jobId = action.payload;
     },
+    [asyncSubmissionGet.pending.type]: (state, action) => {
+      state.loading = true
+    },
     [asyncSubmissionGet.fulfilled.type]: (state, action) => {
+      state.loading = false
       state.userSubmission = action.payload;
+    },
+    [asyncSubmissionGet.rejected.type]: (state, action) => {
+      state.loading = false
     },
   },
 });
@@ -145,4 +153,5 @@ interface InitialStateType {
   codeOutput: string
   jobId: string
   userSubmission: UserSubmissionType[],
+  loading: boolean
 }
