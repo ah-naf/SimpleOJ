@@ -4,7 +4,8 @@ const { addJobToQueue, addSubmitToQueue } = require("../jobQueue");
 const { generateFile } = require("../generateFile");
 const verify = require("../middleware/verify");
 const fs = require("fs");
-const http = require('http')
+const http = require('http');
+const path = require("path");
 
 // Code Related Route
 
@@ -85,10 +86,10 @@ router.get("/submission/:id", verify, async (req, res) => {
 });
 
 // Download Submission
-// const f = '/home/ahnaf/Documents/React/Simple-OJ/server/codes/5928d66a-df3d-4d5d-a6a2-6b9fffcabd65.cpp'
+const f = '/home/ahnaf/Documents/React/Simple-OJ/server/codes/5928d66a-df3d-4d5d-a6a2-6b9fffcabd65.cpp'
 
 // TODO: Fix this route
-router.get('/download/:id', verify, async (req, res) => {
+router.get('/download/:id', async (req, res) => {
   const id = req.params.id
 
   if(!id) return res.status(400).json("Missing required fields")
@@ -98,10 +99,11 @@ router.get('/download/:id', verify, async (req, res) => {
     if(!job) {
       return res.status(400).json('File not found')
     }
-    res.download(job.filepath, 'file.cpp')
+    res.download(job.filepath)
   } catch (error) {
     return res.status(500).json(error)
   }
+  
 
 })
 

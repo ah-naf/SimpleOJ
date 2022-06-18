@@ -11,6 +11,7 @@ export default function SingleSubmissionRow({submission}: {submission: UserSubmi
 
   const handleDownload = () => {
     dispatch(asyncSubmissionDownload((submission as any)._id) as any)
+    setIsOpen(false)
   };
 
   return (

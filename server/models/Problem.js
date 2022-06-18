@@ -15,7 +15,7 @@ const ProblemSchema = new mongoose.Schema(
     input: { type: String },
     output: { type: String },
     constraints: { type: String },
-    timelimit: { type: Number, default: 3.0 },
+    timelimit: { type: Number, default: 5.0 },
     statement: { type: String, required: true },
     testcase: [
       {

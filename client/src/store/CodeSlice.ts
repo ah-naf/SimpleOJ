@@ -93,13 +93,7 @@ export const asyncSubmissionGet = createAsyncThunk('code/getSubmission', async (
 })
 
 export const asyncSubmissionDownload = createAsyncThunk('code/downloadSubmission', async (jobId: string) => {
-  const res = await fetch(`${URL}/code/download/${jobId}`, {
-    credentials: 'include',
-  })
-  const data = await res.json()
-  console.log(data)
-  if(res.ok) return data
-  else toast.error(data)
+  window.open(`${URL}/code/download/${jobId}`)
 })
 
 export const CodeSlice = createSlice({
