@@ -12,6 +12,8 @@ const path = require("path");
 router.post("/run", async (req, res) => {
   let { language = "cpp", code, userInput } = req.body;
 
+  // console.log(req.body)
+
   if (code === undefined || !code) {
     return res.status(400).json({ success: false, error: "Empty code body!" });
   }
@@ -21,6 +23,8 @@ router.post("/run", async (req, res) => {
     // need to generate a c++ file with content from the request
     const filepath = await generateFile(language, code);
 
+    // console.log(filepath)
+
     job = await Job({ language, filepath, userInput }).save();
     const jobId = job["_id"];
     addJobToQueue(jobId);
@@ -28,7 +32,7 @@ router.post("/run", async (req, res) => {
     res.status(201).json({ sueccess: true, jobId });
   } catch (err) {
     return res.status(500).json(err);
-  } 
+  }
 });
 
 router.post("/submit", verify, async (req, res) => {
@@ -86,9 +90,10 @@ router.get("/submission/:id", verify, async (req, res) => {
 });
 
 // Download Submission
-const f = '/home/ahnaf/Documents/React/Simple-OJ/server/codes/5928d66a-df3d-4d5d-a6a2-6b9fffcabd65.cpp'
+const f =
+  "/home/ahnaf/Documents/React/Simple-OJ/server/codes/5928d66a-df3d-4d5d-a6a2-6b9fffcabd65.cpp";
 
-// TODO: Fix this route
+
 router.get('/download/:id', async (req, res) => {
   const id = req.params.id
 

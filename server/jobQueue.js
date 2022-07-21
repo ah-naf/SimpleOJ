@@ -7,7 +7,10 @@ const Problem = require("./models/Problem");
 
 // For running code with sample user input
 
-const jobQueue = new Queue("job-runner-queue");
+const jobQueue = new Queue("job-runner-queue", {
+  redis: { host: 'redis', port: 6379}
+});
+
 
 jobQueue.process(async ({ data }) => {
   const jobId = data.id;
@@ -52,7 +55,11 @@ const addJobToQueue = async (jobId) => {
 
 // For submitting code and check testcase
 
-const submitQueue = new Queue("job-submit-queue");
+const submitQueue = new Queue("job-submit-queue", {
+  redis: { host: 'redis', port: 6379}
+});
+
+
 
 submitQueue.process(async ({ data }) => {
   const jobId = data.id;

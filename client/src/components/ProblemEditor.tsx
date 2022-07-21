@@ -40,6 +40,7 @@ export default function ProblemEditor() {
 
   useEffect(() => {
     const { data } = problemData;
+    console.log(problemData);
     if (data) {
       if (data.job.status !== "in queue") {
         setSkip(true);
