@@ -1,6 +1,8 @@
 SimpleOJ is a simple online-judge by which user can add programming problems and solve them. (Not Finished Yet).
 **Only supports C, C++, Python language.**
 
+[NOTE: Semester final is going on, so can't work on this project regularly.]
+
 ### Currently Working On
  - Learned docker some days ago. Trying to implement it in this project.
  - User can see which problem he solved on the homepage. Which means, a solved button will be there an user solved it.
