@@ -13,6 +13,7 @@ const ProblemSchema = new mongoose.Schema(
     },
     desc: { type: String },
     input: { type: String },
+    whoSolved: [{ type: String }],
     output: { type: String },
     constraints: { type: String },
     timelimit: { type: Number, default: 5.0 },

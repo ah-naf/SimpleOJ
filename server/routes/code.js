@@ -67,6 +67,7 @@ router.get("/status/:id", async (req, res) => {
 
     res.status(200).json({ job, success: true });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ error, success: false });
   }
 });

@@ -8,9 +8,8 @@ const Problem = require("./models/Problem");
 // For running code with sample user input
 
 const jobQueue = new Queue("job-runner-queue", {
-  redis: { host: 'redis', port: 6379}
+  redis: { host: "redis", port: 6379 },
 });
-
 
 jobQueue.process(async ({ data }) => {
   const jobId = data.id;
@@ -56,10 +55,8 @@ const addJobToQueue = async (jobId) => {
 // For submitting code and check testcase
 
 const submitQueue = new Queue("job-submit-queue", {
-  redis: { host: 'redis', port: 6379}
+  redis: { host: "redis", port: 6379 },
 });
-
-
 
 submitQueue.process(async ({ data }) => {
   const jobId = data.id;
@@ -76,29 +73,67 @@ submitQueue.process(async ({ data }) => {
   try {
     let output;
     job["startedAt"] = new Date();
-    job['userId'] = data.userId
-    job['problemId'] = problemId
+    job["userId"] = data.userId;
+    job["problemId"] = problemId;
     // we need to run the file and send the response
-    const checkTestcase = await Promise.all(
-      testcases.map(async (item) => {
-        const start = moment(new Date());
-        if (job.language === "cpp" || job.language === "c")
-          output = await executeCpp(job.filepath, item.input);
-        else output = await executePy(job.filepath, item.input);
+
+    // const checkTestcase = await Promise.all(
+    //   testcases.map(async (item) => {
+    //     const start = moment(new Date());
+    //     if (job.language === "cpp" || job.language === "c")
+    //       output = await executeCpp(job.filepath, item.input);
+    //     else output = await executePy(job.filepath, item.input);
+    //     const end = moment(new Date());
+    //     const executionTime = end.diff(start, "seconds", true);
+    //     if (executionTime > problem.timelimit) {
+    //       job["verdict"] = "tle";
+    //       return false;
+    //     }
+    //     return output === item.output;
+    //   })
+    // );
+
+    let passed = true
+
+    // TODO: Delete \n from end of all user input and testcases
+
+    const checkTestcase = testcases.map((item) => {
+      const start = moment(new Date());
+      try {
         const end = moment(new Date());
+        if (job.language === "cpp" || job.language === "c")
+          output = executeCpp(job.filepath, item.input);
+        else output = executePy(job.filepath, item.input);
+
+        console.log({output})
+        console.log({user: item.output})
+        // console.log({output: output === item.output})
+
         const executionTime = end.diff(start, "seconds", true);
         if (executionTime > problem.timelimit) {
           job["verdict"] = "tle";
+          passed &= false
           return false;
         }
+        passed &= (output === item.output)
         return output === item.output;
-      })
-    );
+      } catch (error) {
+        console.log({ error });
+      }
+    });
 
-    const passed = checkTestcase.every(Boolean);
+
 
     passed && (job["verdict"] = "ac");
     !passed && job["verdict"] !== "tle" && (job["verdict"] = "wa");
+
+    if (passed) {
+      const distinct_user = new Set(problem.whoSolved);
+      distinct_user.add(data.userId);
+      problem.whoSolved = [...distinct_user];
+      console.log(problem)
+      await problem.save();
+    }
 
     job["completedAt"] = new Date();
     job["status"] = "success";
@@ -123,7 +158,7 @@ const addSubmitToQueue = async (jobId, problemId, userId) => {
   submitQueue.add({
     id: jobId,
     problemId,
-    userId
+    userId,
   });
 };
 

@@ -31,7 +31,7 @@ export default function ProblemEditor() {
   useEffect(() => {
     setJobId(JobId);
   }, [JobId]);
-
+ 
   // Status polling
   const problemData = useGetProblemStatusQuery(
     jobId,
