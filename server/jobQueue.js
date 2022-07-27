@@ -75,27 +75,8 @@ submitQueue.process(async ({ data }) => {
     job["startedAt"] = new Date();
     job["userId"] = data.userId;
     job["problemId"] = problemId;
-    // we need to run the file and send the response
-
-    // const checkTestcase = await Promise.all(
-    //   testcases.map(async (item) => {
-    //     const start = moment(new Date());
-    //     if (job.language === "cpp" || job.language === "c")
-    //       output = await executeCpp(job.filepath, item.input);
-    //     else output = await executePy(job.filepath, item.input);
-    //     const end = moment(new Date());
-    //     const executionTime = end.diff(start, "seconds", true);
-    //     if (executionTime > problem.timelimit) {
-    //       job["verdict"] = "tle";
-    //       return false;
-    //     }
-    //     return output === item.output;
-    //   })
-    // );
 
     let passed = true
-
-    // TODO: Delete \n from end of all user input and testcases
 
     const checkTestcase = testcases.map((item) => {
       const start = moment(new Date());
@@ -105,24 +86,23 @@ submitQueue.process(async ({ data }) => {
           output = executeCpp(job.filepath, item.input);
         else output = executePy(job.filepath, item.input);
 
-        console.log({output})
-        console.log({user: item.output})
-        // console.log({output: output === item.output})
+
+        let outputUser = output.trim();
+        let outputTestcase = item.output.trim()
+
 
         const executionTime = end.diff(start, "seconds", true);
         if (executionTime > problem.timelimit) {
           job["verdict"] = "tle";
-          passed &= false
+          passed &= false;
           return false;
         }
-        passed &= (output === item.output)
-        return output === item.output;
+        passed &= outputUser === outputTestcase;
+        return outputUser === outputTestcase;
       } catch (error) {
         console.log({ error });
       }
     });
-
-
 
     passed && (job["verdict"] = "ac");
     !passed && job["verdict"] !== "tle" && (job["verdict"] = "wa");
@@ -131,7 +111,6 @@ submitQueue.process(async ({ data }) => {
       const distinct_user = new Set(problem.whoSolved);
       distinct_user.add(data.userId);
       problem.whoSolved = [...distinct_user];
-      console.log(problem)
       await problem.save();
     }
 
