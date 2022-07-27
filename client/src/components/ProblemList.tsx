@@ -1,12 +1,18 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { RootState } from "../store/store";
 
+
 export default function ProblemList() {
   const problems = useSelector((state: RootState) => state.problem.problems);
+  const user = useSelector((state: RootState) => state.auth.user)
   const navigate = useNavigate();
   const loading = useSelector((state: RootState) => state.problem.loading);
+  
+  const isItSolved = (solvedArr: any) => {
+    return solvedArr.includes(user?._id)
+  }
 
   return (
     <div className="space-y-4">
@@ -14,7 +20,7 @@ export default function ProblemList() {
         ? problems.map((item, index) => (
             <div
               key={index}
-              className="flex items-center justify-between bg-gray-300 p-4 px-8 rounded shadow hover:scale-105 transition-all duration-300 ease-in-out"
+              className="flex items-center justify-between bg-[whitesmoke] p-4 px-8 rounded shadow hover:scale-105 transition-all duration-300 ease-in-out"
               onClick={() => navigate(`/problem/${item._id}`)}
             >
               <div>
@@ -29,8 +35,9 @@ export default function ProblemList() {
                 </p>
               </div>
 
-              <button className="p-2 px-4 bg-slate-600 outline-none rounded shadow text-white">
-                Solve Now
+              <button className={`p-2 px-4 outline-none rounded shadow text-white ${isItSolved(item.whoSolved) ? "bg-green-600 font-semibold line-through" : "bg-black"}`}>
+                {isItSolved(item.whoSolved) ? 'Solved' : "Solve Now"}
+        
               </button>
             </div>
           ))
@@ -39,17 +46,16 @@ export default function ProblemList() {
               key={item}
               className="border border-blue-300 shadow rounded-md p-4 max-w-4xl w-full mx-auto"
             >
-              <div className="animate-pulse flex space-x-4">
+              <div className="animate-pulse flex items-center space-x-4">
                 <div className="flex-1 space-y-6 py-1">
-                  <div className="h-3 bg-slate-700 rounded max-w-xl"></div>
+                  <div className="h-3 bg-slate-700 rounded max-w-md"></div>
                   <div className="space-y-3">
-                    <div className="grid grid-cols-3 gap-4">
-                      <div className="h-2 bg-slate-700 rounded col-span-2"></div>
-                      <div className="h-2 bg-slate-700 rounded col-span-1"></div>
+                    <div className="grid grid-cols-5 gap-4">
+                      <div className="h-2 bg-slate-700 rounded col-span-3 max-w-xs"></div>
                     </div>
-                    <div className="h-2 bg-slate-700 rounded"></div>
                   </div>
                 </div>
+                <div className="h-8 bg-slate-500 rounded w-24"></div>
               </div>
             </div>
           ))}

@@ -19,7 +19,8 @@ export interface ProblemType extends PropblemDetailType {
     testcase ?: TestcaseType[],
     updatedAt: string,
     createdAt: string
-    _id: string
+    _id: string,
+    whoSolved: string[]
 }
 
 export interface UserType {
