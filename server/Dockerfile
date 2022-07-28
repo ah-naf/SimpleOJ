@@ -16,4 +16,6 @@ RUN npm install
 COPY . .
 
 EXPOSE 5000
+
 CMD ["npx", "nodemon", "index"];
+# CMD ["npm", "start"]

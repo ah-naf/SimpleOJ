@@ -3,14 +3,22 @@ import MDEditor from "@uiw/react-md-editor";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { useSearchParams } from "react-router-dom";
 import rehypeSanitize from "rehype-sanitize";
 import TestcaseContainer from "../components/TestcaseContainer";
 import TestcaseModal from "../components/TestcaseModal";
-import { asyncProblemAdd } from "../store/ProblemSlice";
+import {
+  asyncProblemAdd,
+  asyncProblemEdit,
+  setTestcase,
+} from "../store/ProblemSlice";
 import { RootState } from "../store/store";
 
 export default function AddProblem() {
   const user = useSelector((state: RootState) => state.auth.user);
+  const problem = useSelector(
+    (state: RootState) => state.problem.singleProblem
+  );
   const [problemDetail, setProblemDetail] = useState({
     slug: "",
     title: "",
@@ -23,9 +31,43 @@ export default function AddProblem() {
   const testcase = useSelector((state: RootState) => state.problem.testcase);
   const loading = useSelector((state: RootState) => state.problem.loading);
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
+  const [editDetails, setEditDetails] = useState({
+    edit: searchParams.get("edit"),
+    problemId: searchParams.get("problemId"),
+  });
 
+  useEffect(() => {
+    if (editDetails.edit === "true" && editDetails.problemId && problem) {
+      setProblemDetail({
+        slug: problem?.slug,
+        title: problem?.title,
+        desc: problem?.desc,
+        statement: problem?.statement,
+        input: problem?.input,
+        output: problem?.output,
+        constraints: problem?.constraints,
+      });
+      if (problem.testcase) dispatch(setTestcase(problem.testcase));
+    }
+  }, [editDetails, problem]);
+
+  console.log(problem);
 
   const handleAdd = async () => {
+    // Handle Problem Edit
+    if (problem && editDetails.edit === "true" && editDetails.problemId) {
+      dispatch(
+        asyncProblemEdit({
+          detail: problemDetail,
+          testcase,
+          id: problem._id,
+        }) as any
+      );
+      return;
+    }
+
+    // Handle Problem Add
     if (!user) {
       toast.error("Sign in to add problem");
       return;
@@ -48,11 +90,20 @@ export default function AddProblem() {
   return (
     <>
       <div className="max-w-4xl mx-auto font-mono my-4">
-        <h1 className="text-4xl">Create Problem</h1>
-        <p className="text-sm italic text-gray-500 my-2">
-          Get started by providing the initial details needed to create a
-          problem.
-        </p>
+        <h1 className="text-4xl">
+          {problem && editDetails.edit === "true" && editDetails.problemId
+            ? "Edit"
+            : "Create"}{" "}
+          Problem
+        </h1>
+        {problem && editDetails.edit === "true" && editDetails.problemId ? (
+          ""
+        ) : (
+          <p className="text-sm italic text-gray-500 my-2">
+            Get started by providing the initial details needed to create a
+            problem.
+          </p>
+        )}
 
         {/* Problem Details */}
         <div className="mt-8 space-y-8">
@@ -171,10 +222,12 @@ export default function AddProblem() {
           <>
             <TestcaseModal />
             <button
-              className="outline-none border shadow bg-slate-600 text-gray-200 rounded-sm font-mono font-semibold px-5 py-2"
+              className="outline-none border shadow bg-slate-700 text-gray-200 rounded-sm font-mono font-semibold px-5 py-2 hover:bg-slate-600"
               onClick={handleAdd}
             >
-              Proceed
+              {problem && editDetails.edit === "true" && editDetails.problemId
+                ? "Edit"
+                : "Proceed"}
             </button>
           </>
         )}

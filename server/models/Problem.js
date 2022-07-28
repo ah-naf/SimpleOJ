@@ -18,6 +18,7 @@ const ProblemSchema = new mongoose.Schema(
     constraints: { type: String },
     timelimit: { type: Number, default: 5.0 },
     statement: { type: String, required: true },
+    createdBy: { type: String, required: true },
     testcase: [
       {
         input: { type: String },

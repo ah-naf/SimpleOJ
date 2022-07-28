@@ -26,7 +26,7 @@ export default function Navbar() {
         <div className="flex items-center z-50">
           <Link
             to={"/create"}
-            className="mr-8 p-1 px-3 border border-slate-300 rounded-sm text-white"
+            className="mr-8 p-1 px-3 border border-slate-300 rounded-sm text-white hover:bg-white hover:text-black"
           >
             Add Problem
           </Link>

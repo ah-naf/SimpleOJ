@@ -37,6 +37,34 @@ export const asyncProblemAdd = createAsyncThunk(
   }
 );
 
+export const asyncProblemEdit = createAsyncThunk(
+  "problem/editProblem",
+  async ({
+    detail,
+    testcase,
+    id
+  }: {
+    detail: PropblemDetailType;
+    testcase: TestcaseType[];
+    id: string
+  }) => {
+    const res = await fetch(`${URL}/problem/edit/${id}`, {
+      method: "PUT",
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ detail, testcase }),
+    });
+    const data = await res.json();
+    if (res.ok) {
+      toast.success('Problem Updated Successfully...')
+      window.location.href = '/'
+      return data;
+    } else toast.error(JSON.stringify(data));
+  }
+);
+
 export const asyncProblemGet = createAsyncThunk(
   "problem/getProblem",
   async () => {
@@ -80,6 +108,9 @@ export const ProblemSlice = createSlice({
         (item, index) => index !== action.payload
       );
     },
+    setTestcase: (state: typeof initialState, action: PayloadAction<TestcaseType[]>) => {
+      state.testcase = action.payload
+    }
   },
   extraReducers: {
     [asyncProblemAdd.pending.type]: (state) => {
@@ -114,7 +145,7 @@ export const ProblemSlice = createSlice({
   },
 });
 
-export const { addTestcase, removeTestcase } = ProblemSlice.actions;
+export const { addTestcase, removeTestcase, setTestcase } = ProblemSlice.actions;
 
 export default ProblemSlice.reducer;
 

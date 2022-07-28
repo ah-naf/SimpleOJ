@@ -20,7 +20,8 @@ export interface ProblemType extends PropblemDetailType {
     updatedAt: string,
     createdAt: string
     _id: string,
-    whoSolved: string[]
+    whoSolved: string[],
+    createdBy: string
 }
 
 export interface UserType {

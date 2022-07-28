@@ -11,11 +11,31 @@ router.post("/add",verify, async (req, res) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  const data = { ...detail, testcase: [...testcase] };
+  const data = { ...detail, testcase: [...testcase], createdBy: req.user._id };
 
   try {
     const newProblem = new Problem(data);
     const saved = await newProblem.save();
+
+    return res.status(201).json(saved);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+});
+
+router.put("/edit/:id",verify, async (req, res) => {
+  const { testcase, detail } = req.body;
+  const id = req.params.id
+
+  if (!testcase || !detail || !id) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  const data = { ...detail, testcase: [...testcase], createdBy: req.user._id };
+
+  try {
+    const saved = await Problem.findByIdAndUpdate(id, data);
 
     return res.status(201).json(saved);
   } catch (error) {

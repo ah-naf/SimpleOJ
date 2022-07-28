@@ -11,6 +11,7 @@ export default function ProblemList() {
   const loading = useSelector((state: RootState) => state.problem.loading);
   
   const isItSolved = (solvedArr: any) => {
+    if(!solvedArr) return false
     return solvedArr.includes(user?._id)
   }
 
@@ -35,7 +36,7 @@ export default function ProblemList() {
                 </p>
               </div>
 
-              <button className={`p-2 px-4 outline-none rounded shadow text-white ${isItSolved(item.whoSolved) ? "bg-green-600 font-semibold line-through" : "bg-black"}`}>
+              <button className={`p-2 px-4 outline-none rounded shadow text-white ${isItSolved(item.whoSolved) ? "bg-green-600 font-semibold line-through" : "bg-black hover:bg-white hover:text-black hover:border"}`}>
                 {isItSolved(item.whoSolved) ? 'Solved' : "Solve Now"}
         
               </button>
