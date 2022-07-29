@@ -44,6 +44,23 @@ router.put("/edit/:id",verify, async (req, res) => {
   }
 });
 
+router.delete("/delete/:id",verify, async (req, res) => {
+  const id = req.params.id
+
+  if (!id) {
+    return res.status(400).json({ message: "Missing required fields" });
+  }
+
+  try {
+    await Problem.findByIdAndDelete(id);
+
+    return res.status(201).json("Problem Delete Successfully");
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(error);
+  }
+});
+
 router.get("/", async (req, res) => {
   try {
     const data = await Problem.find();

@@ -21,7 +21,7 @@ export default function ProblemList() {
         ? problems.map((item, index) => (
             <div
               key={index}
-              className="flex items-center justify-between bg-[whitesmoke] p-4 px-8 rounded shadow hover:scale-105 transition-all duration-300 ease-in-out"
+              className="flex items-center justify-between bg-[whitesmoke] p-4 px-8 rounded shadow-md hover:scale-105 transition-all duration-300 ease-in-out"
               onClick={() => navigate(`/problem/${item._id}`)}
             >
               <div>

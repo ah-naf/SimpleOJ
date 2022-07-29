@@ -65,6 +65,25 @@ export const asyncProblemEdit = createAsyncThunk(
   }
 );
 
+export const asyncProblemDelete = createAsyncThunk(
+  "problem/deleteProblem",
+  async (id: string) => {
+    const res = await fetch(`${URL}/problem/delete/${id}`, {
+      method: "DELETE",
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const data = await res.json();
+    if (res.ok) {
+      toast.success('Problem Deleted Successfully...')
+      window.location.href = '/'
+      return data;
+    } else toast.error(JSON.stringify(data));
+  }
+);
+
 export const asyncProblemGet = createAsyncThunk(
   "problem/getProblem",
   async () => {
