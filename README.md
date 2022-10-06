@@ -23,3 +23,12 @@ I used nodejs child-process to run c, c++ and python code in background. Don't k
   - Docker
 
 Don't know how to calculate the time complexity and memory complexity of a running code. Didn't find any helpful resources regarding this topic. Will learn it soon and implement it in sha allah.
+
+### How to run it in local machine?
+1. <a href="https://docs.docker.com/engine/install/">Install docker</a> if you don't have it installed in your machine.
+2. Clone this repo.
+3. Run the following command and you are good to go.
+   ```
+   docker-compose up
+   ```
+4. If you need any help or information, feel free to knock me in <a href="https://linkedin.com/in/ahnafhasan144">LinkedIn</a>
