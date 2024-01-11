@@ -11,7 +11,7 @@ if (!fs.existsSync(outputPath)) {
 const executeCpp = (filepath, userInput) => {
   const jobId = path.basename(filepath).split(".")[0];
   const outPath = path.join(outputPath, `${jobId}.out`);
- 
+  
   const child = execSync(
     `g++ ${filepath} -o ${outPath} && cd ${outputPath} && ./${jobId}.out`,
     { input: userInput }
@@ -24,4 +24,3 @@ const executeCpp = (filepath, userInput) => {
 module.exports = {
   executeCpp,
 };
-
