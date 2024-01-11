@@ -1,32 +1,41 @@
 services:
   client:
     build: ./client
-    ports: 
+    ports:
       - 3000:3000
     volumes:
       - ./client:/app
-  
+      - /app/node_modules
+
+  db:
+    image: mongo:7.0.5-rc0-jammy
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - simpleoj:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+
   server:
     build: ./server
     ports:
       - 5000:5000
     environment:
-      MONGO_URI: mongodb://db/simpleoj
+      MONGO_URI: mongodb://root:password@db:27017/simpleoj?authSource=admin
 
     volumes:
       - ./server:/app
+      - /app/node_modules
     links:
-      - redis:redis
-  
-  db:
-    image: mongo:4.0-xenial
-    ports:
-      - 27018:27017
-    volumes:
-      - simpleoj:/data/db
+      - redis
+      - db
+    depends_on:
+      - db
 
   redis:
-    image: redis:alpine3.16
+    image: redis:7.2.3-alpine
 
 volumes:
   simpleoj:

@@ -12,7 +12,7 @@ RUN apk add --update redis && \
     redis-server &
 
 COPY package*.json ./
-RUN npm install 
+RUN npm ci 
 COPY . .
 
 EXPOSE 5000
