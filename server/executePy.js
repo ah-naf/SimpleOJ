@@ -1,11 +1,13 @@
 const { execSync } = require("child_process");
 const path = require("path");
 
-
 const executePy = (filepath, userInput) => {
-  const child = execSync(`python3 ${filepath}`, { input: userInput });
+  return new Promise((resolve, reject) => {
+    // console.log(filepath);
+    const child = execSync(`python3 ${filepath}`, { input: userInput });
 
-  return child.toString();
+    resolve(child.toString());
+  });
 };
 
 module.exports = {

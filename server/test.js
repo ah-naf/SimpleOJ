@@ -11,7 +11,7 @@ ps.on("close", (code) => {
   const execute = spawn("./cc.out"); // Pass "10" as a command-line argument
 
   // Handle the output of the child process if needed
-  execute.stdin.write("10");
+  execute.stdin.write("2 3");
   execute.stdin.end();
 
   // Handle the output of the child process
