@@ -7,11 +7,9 @@ const Problem = require("./models/Problem");
 
 // For running code with sample user input
 
-
 const jobQueue = new Queue("job-runner-queue", {
-  redis: { host: "redis", port: 6379,  }
+  redis: { host: "redis", port: 6379 },
 });
-
 
 jobQueue.process(async ({ data }) => {
   const jobId = data.id;
@@ -28,6 +26,9 @@ jobQueue.process(async ({ data }) => {
     if (job.language === "cpp" || job.language === "c")
       output = await executeCpp(job.filepath, job.userInput);
     else output = await executePy(job.filepath, job.userInput);
+
+    console.log(output);
+    console.log(typeof output);
 
     job["completedAt"] = new Date();
     job["status"] = "success";
@@ -78,7 +79,7 @@ submitQueue.process(async ({ data }) => {
     job["userId"] = data.userId;
     job["problemId"] = problemId;
 
-    let passed = true
+    let passed = true;
 
     const checkTestcase = testcases.map((item) => {
       const start = moment(new Date());
@@ -88,10 +89,8 @@ submitQueue.process(async ({ data }) => {
           output = executeCpp(job.filepath, item.input);
         else output = executePy(job.filepath, item.input);
 
-
         let outputUser = output.trim();
-        let outputTestcase = item.output.trim()
-
+        let outputTestcase = item.output.trim();
 
         const executionTime = end.diff(start, "seconds", true);
         if (executionTime > problem.timelimit) {
