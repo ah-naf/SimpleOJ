@@ -1,31 +1,23 @@
 const { spawn } = require("child_process");
 
-const ps = spawn("g++", ["cc.cc", "-o", "cc.out"]);
+// Replace 'script.py' with the name of your Python script
+const execute = spawn("python3", ["script.py"]);
 
-ps.on("close", (code) => {
-  if (code !== 0) {
-    console.error(`Compilation process exited with code ${code}`);
-    return;
-  }
+// If you need to send input to the Python script, you can write to stdin
+execute.stdin.write("10 20");
+execute.stdin.end();
 
-  const execute = spawn("./cc.out"); // Pass "10" as a command-line argument
+// Handling the output of the Python script
+execute.stdout.on("data", (data) => {
+  console.log(`Child Process Output: ${data}`);
+});
 
-  // Handle the output of the child process if needed
-  execute.stdin.write("2 3");
-  execute.stdin.end();
+// Handle errors
+execute.on("error", (err) => {
+  console.error(`Error executing script.py: ${err}`);
+});
 
-  // Handle the output of the child process
-  execute.stdout.on("data", (data) => {
-    console.log(`Child Process Output: ${data}`);
-  });
-
-  // Handle errors if needed
-  execute.on("error", (err) => {
-    console.error(`Error executing cc.out: ${err}`);
-  });
-
-  // Handle the child process exit
-  execute.on("close", (code) => {
-    console.log(`Child Process exited with code ${code}`);
-  });
+// Handle the child process exit
+execute.on("close", (code) => {
+  console.log(`Child Process exited with code ${code}`);
 });
