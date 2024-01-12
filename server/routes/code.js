@@ -4,7 +4,7 @@ const { addJobToQueue, addSubmitToQueue } = require("../jobQueue");
 const { generateFile } = require("../generateFile");
 const verify = require("../middleware/verify");
 const fs = require("fs");
-const http = require('http');
+const http = require("http");
 const path = require("path");
 
 // Code Related Route
@@ -87,24 +87,21 @@ router.get("/submission/:id", verify, async (req, res) => {
 });
 
 // Download Submission
-
-router.get('/download/:id', async (req, res) => {
-  const id = req.params.id
-
-  if(!id) return res.status(400).json("Missing required fields")
+// TODO: Render the solution instead of downloading it/
+router.get("/download/:id", async (req, res) => {
+  const id = req.params.id;
+  if (!id) return res.status(400).json("Missing required fields");
 
   try {
-    const job = await Job.findById(id)
-    if(!job) {
-      return res.status(400).json('File not found')
+    const job = await Job.findById(id);
+    if (!job) {
+      return res.status(400).json("File not found");
     }
-    res.download(job.filepath)
+    const content = await fs.readFileSync(job.filepath, "utf8");
+    res.status(200).json({ content });
   } catch (error) {
-    return res.status(500).json(error)
+    return res.status(500).json(error);
   }
-  
-})
-
-
+});
 
 module.exports = router;
