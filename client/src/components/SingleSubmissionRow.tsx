@@ -3,6 +3,8 @@ import { useDispatch } from "react-redux";
 import { asyncSubmissionContent } from "../store/CodeSlice";
 import { UserSubmissionType } from "../utils/type";
 
+// TODO: Show the code in a modal
+
 export default function SingleSubmissionRow({
   submission,
 }: {

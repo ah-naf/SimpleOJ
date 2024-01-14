@@ -1,104 +1,104 @@
-@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Mukta:wght@200;300;400;500;600;700;800&family=Ubuntu+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 .CodeMirror {
-    min-height: calc(100vh - 450px);
-    font-size: 16px;
-    line-height: 1.8;
-    width: 100%;
-    margin-top: 10px;
-    border: 1px solid gainsboro;
-    padding: 0 10px;
-    border-right: 0;
-    font-weight: 400 !important;
+  min-height: calc(100vh - 450px);
+  font-size: 16px;
+  line-height: 1.8;
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid gainsboro;
+  padding: 0 0px;
+  border-right: 0;
+  font-weight: 400 !important;
 }
 
 .CodeMirror-gutter {
-    background: white;
+  background: white;
 }
 
 .sc1::-webkit-scrollbar {
-    width: 10px;
-    height: 4px;
+  width: 10px;
+  height: 4px;
 }
 
 .sc1::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.22);
-    border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.22);
+  border-radius: 10px;
 }
 
 .sc1::-webkit-scrollbar-thumb {
-    background-color: whitesmoke;
-    border-radius: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.3);
+  background-color: whitesmoke;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
 }
 
-.w-md-editor-toolbar>ul>li>button {
-    color: gray;
-    padding: 10px;
-    height: unset;
-    border-radius: 50%;
+.w-md-editor-toolbar > ul > li > button {
+  color: gray;
+  padding: 10px;
+  height: unset;
+  border-radius: 50%;
 }
 
-.w-md-editor-toolbar>ul>li>button>svg {
-    width: 20px;
-    height: 20px;
+.w-md-editor-toolbar > ul > li > button > svg {
+  width: 20px;
+  height: 20px;
 }
 
 .w-md-editor-toolbar {
-    height: 60px !important;
+  height: 60px !important;
 }
 
 .w-md-editor {
-    height: 100% !important;
-    overflow-x: auto;
+  height: 100% !important;
+  overflow-x: auto;
 }
 
-.w-md-editor-preview>p {
-    font-family: "Ubuntu Mono" !important;
+.w-md-editor-preview > p {
+  font-family: "Ubuntu Mono" !important;
 }
 
-.modal-explanation .w-md-editor-toolbar>ul>li>button>svg {
-    width: 15px;
-    height: 15px;
+.modal-explanation .w-md-editor-toolbar > ul > li > button > svg {
+  width: 15px;
+  height: 15px;
 }
 
 .modal-explanation .w-md-editor-toolbar {
-    height: 80px !important;
+  height: 80px !important;
 }
 
 .problemPage {
-    height: calc(100vh - 85px);
-    /* overflow: hidden; */
+  height: calc(100vh - 85px);
+  /* overflow: hidden; */
 }
 
 .nextui-c-ftJsHY {
-    display: unset !important;
+  display: unset !important;
 }
 
 .w-md-editor-text-pre {
-    border-radius: 0 !important;
-    -webkit-text-fill-color: transparent !important;
+  border-radius: 0 !important;
+  -webkit-text-fill-color: transparent !important;
 }
 
 .textarea,
 .w-md-editor-text-input {
-    -webkit-text-fill-color: unset !important;
-    overflow-y: auto !important;
-    scrollbar-width: none !important;
-    /* Firefox */
-    -ms-overflow-style: none !important;
+  -webkit-text-fill-color: unset !important;
+  overflow-y: auto !important;
+  scrollbar-width: none !important;
+  /* Firefox */
+  -ms-overflow-style: none !important;
 }
 
 .w-md-editor-text-input::-webkit-scrollbar,
 .textarea::-webkit-scrollbar {
-    /* WebKit */
-    width: 0 !important;
-    height: 0 !important;
+  /* WebKit */
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .wmde-markdown ul {
-    list-style-type: disc !important;
-    font-family: "Mukta", sans-serif !important;
+  list-style-type: disc !important;
+  font-family: "Mukta", sans-serif !important;
 }

@@ -10,8 +10,10 @@ export default function Editor() {
   const [stubs, setStubs] = useState(stub);
   const dispatch = useDispatch();
   const location = useLocation().pathname.split("/")[2];
+  const [theme, setTheme] = useState("neo"); // Default theme
 
   useEffect(() => {
+    setTheme(localStorage.getItem("theme") || "neo");
     const localLanguage = localStorage.getItem(`${location}-language`);
     let curLang = language;
     let localCode;
@@ -34,7 +36,7 @@ export default function Editor() {
 
   return (
     <>
-      <div>
+      <div className="space-x-4">
         <select
           value={language}
           onChange={(e) => {
@@ -56,8 +58,21 @@ export default function Editor() {
           <option value="py">Python</option>
           <option value="c">C</option>
         </select>
+        <select
+          value={theme}
+          onChange={(e) => {
+            setTheme(e.target.value);
+            localStorage.setItem("theme", e.target.value);
+          }}
+          className="p-2 text-xs pr-4 rounded-md font-bold bg-transparent border border-gray-300"
+        >
+          <option value="juejin">Juejin</option>
+          <option value="isotope">Isotope</option>
+          <option value="neo">Neo</option>
+          <option value="zenburn">Zenburn</option>
+        </select>
       </div>
-      <CodeEditor language={language} codeStub={stubs} />
+      <CodeEditor language={language} codeStub={stubs} theme={theme} />
     </>
   );
 }

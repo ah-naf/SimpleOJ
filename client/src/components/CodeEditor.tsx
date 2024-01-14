@@ -6,10 +6,17 @@ import "codemirror/addon/fold/comment-fold"; // Optional, for folding comment bl
 import "codemirror/addon/fold/foldcode";
 import "codemirror/addon/fold/foldgutter";
 import "codemirror/addon/fold/foldgutter.css"; // For styling the fold gutter
+
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/clike/clike";
 import "codemirror/mode/javascript/javascript";
-import "codemirror/theme/idea.css";
+import "codemirror/theme/isotope.css";
+import "codemirror/theme/juejin.css";
+import "codemirror/theme/neo.css";
+import "codemirror/theme/zenburn.css";
+// import "codemirror/theme"
+// ...other imports
+
 import { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -20,6 +27,7 @@ interface PropType {
   codeStub: { [key: string]: string };
   onCodeChange?: (newCode: string) => void;
   disabled?: boolean;
+  theme?: string;
 }
 
 export default function CodeEditor({
@@ -27,10 +35,19 @@ export default function CodeEditor({
   codeStub,
   onCodeChange,
   disabled = false,
+  theme = "neo",
 }: PropType) {
   const editorRef = useRef<EditorFromTextArea>();
   const dispatch = useDispatch();
   const location = useLocation().pathname.split("/")[2];
+
+  // In CodeEditor component
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.setOption("theme", theme);
+    }
+    // other useEffect code
+  }, [theme]);
 
   useEffect(() => {
     if (!editorRef.current) {
@@ -39,7 +56,7 @@ export default function CodeEditor({
       ) as HTMLTextAreaElement;
       editorRef.current = Codemirror.fromTextArea(editorId, {
         mode: getMode(language),
-        theme: "idea",
+        theme: theme,
         autoCloseBrackets: true,
         lineNumbers: true,
         tabSize: 2,
