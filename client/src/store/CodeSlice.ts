@@ -9,21 +9,22 @@ const initialState: InitialStateType = {
   codeOutput: "",
   jobId: "",
   userSubmission: [],
-  loading: false
+  currentSubmission: "",
+  loading: false,
 };
 
-const URL = 'http://localhost:5000/api'
+const URL = "http://localhost:5000/api";
 
 export const asyncProgrammemRun = createAsyncThunk(
   "code/runProgramme",
   async ({
     currentCode,
     currentLang,
-    userInput
+    userInput,
   }: {
     currentCode: string;
     currentLang: string;
-    userInput: string
+    userInput: string;
   }) => {
     const res = await fetch(`${URL}/code/run`, {
       method: "POST",
@@ -38,10 +39,10 @@ export const asyncProgrammemRun = createAsyncThunk(
       }),
     });
     const data = await res.json();
-    
-    if(res.ok) return data.jobId
+
+    if (res.ok) return data.jobId;
     else {
-      toast.error(data)
+      toast.error(data);
     }
   }
 );
@@ -84,18 +85,29 @@ export const asyncProgrammemSubmit = createAsyncThunk(
   }
 );
 
-export const asyncSubmissionGet = createAsyncThunk('code/getSubmission', async (problemId: string) => {
-  const res = await fetch(`${URL}/code/submission/${problemId}`, {
-    credentials: 'include'
-  })
-  const data = await res.json()
-  if(res.ok) return data
-  else toast.error(data)
-})
+export const asyncSubmissionGet = createAsyncThunk(
+  "code/getSubmission",
+  async (problemId: string) => {
+    const res = await fetch(`${URL}/code/submission/${problemId}`, {
+      credentials: "include",
+    });
+    const data = await res.json();
+    if (res.ok) return data;
+    else toast.error(data);
+  }
+);
 
-export const asyncSubmissionDownload = createAsyncThunk('code/downloadSubmission', async (jobId: string) => {
-  window.open(`${URL}/code/download/${jobId}`)
-})
+export const asyncSubmissionContent = createAsyncThunk(
+  "code/fetchSubmissionContent",
+  async (jobId: string) => {
+    const res = await fetch(`${URL}/code/content/${jobId}`);
+    const data = await res.json();
+    if (res.ok) return data.content;
+    else {
+      toast.error(data);
+    }
+  }
+);
 
 export const CodeSlice = createSlice({
   name: "Code",
@@ -112,7 +124,7 @@ export const CodeSlice = createSlice({
       action: PayloadAction<string>
     ) => {
       state.currentLang = action.payload;
-    }
+    },
   },
   extraReducers: {
     [asyncProgrammemRun.pending.type]: (state) => {
@@ -130,14 +142,17 @@ export const CodeSlice = createSlice({
       state.jobId = action.payload;
     },
     [asyncSubmissionGet.pending.type]: (state, action) => {
-      state.loading = true
+      state.loading = true;
     },
     [asyncSubmissionGet.fulfilled.type]: (state, action) => {
-      state.loading = false
+      state.loading = false;
       state.userSubmission = action.payload;
     },
     [asyncSubmissionGet.rejected.type]: (state, action) => {
-      state.loading = false
+      state.loading = false;
+    },
+    [asyncSubmissionContent.fulfilled.type]: (state, action) => {
+      state.currentSubmission = action.payload;
     },
   },
 });
@@ -150,8 +165,9 @@ interface InitialStateType {
   currentCode: string;
   currentLang: string;
   codeLoading: boolean;
-  codeOutput: string
-  jobId: string
-  userSubmission: UserSubmissionType[],
-  loading: boolean
+  codeOutput: string;
+  jobId: string;
+  userSubmission: UserSubmissionType[];
+  loading: boolean;
+  currentSubmission: string;
 }

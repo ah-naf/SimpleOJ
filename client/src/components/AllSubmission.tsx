@@ -1,19 +1,23 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { asyncSubmissionGet } from "../store/CodeSlice";
 import { RootState } from "../store/store";
 import SingleSubmissionRow from "./SingleSubmissionRow";
 
 export default function AllSubmission() {
-  const user = useSelector((state: RootState) => state.auth.user); 
-  const dispatch = useDispatch()
-  const userSubmission = useSelector((state: RootState) => state.code.userSubmission)
-  const problem = useSelector((state: RootState) => state.problem.singleProblem)
-  const loading = useSelector((state:RootState) => state.code.loading)
+  const user = useSelector((state: RootState) => state.auth.user);
+  const dispatch = useDispatch();
+  const userSubmission = useSelector(
+    (state: RootState) => state.code.userSubmission
+  );
+  const problem = useSelector(
+    (state: RootState) => state.problem.singleProblem
+  );
+  const loading = useSelector((state: RootState) => state.code.loading);
 
   useEffect(() => {
-    if(user && problem) dispatch(asyncSubmissionGet(problem?._id) as any)
-  }, [user, problem])
+    if (user && problem) dispatch(asyncSubmissionGet(problem?._id) as any);
+  }, [user, problem]);
 
   if (!user)
     return (
@@ -28,26 +32,7 @@ export default function AllSubmission() {
         {user.displayName + "'s"} Submission
       </h3>
       {loading ? (
-        <div className="border border-blue-300 shadow rounded-md p-4">
-          <div className="flex animate-pulse w-full justify-between">
-            <div className="w-[23%] h-3 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-3 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-3 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-3 rounded bg-slate-700"></div>
-          </div>
-          <div className="flex animate-pulse w-full justify-between mt-4">
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-          </div>
-          <div className="flex animate-pulse w-full justify-between mt-4">
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-            <div className="w-[23%] h-2 rounded bg-slate-700"></div>
-          </div>
-        </div>
+        <Loading />
       ) : userSubmission.length ? (
         <table className="table-auto w-full border shadow rounded">
           <thead>
@@ -69,6 +54,31 @@ export default function AllSubmission() {
           <p className="font-mono text-lg">No Previous Submission Found.</p>
         </div>
       )}
+    </div>
+  );
+}
+
+function Loading() {
+  return (
+    <div className="border border-blue-300 shadow rounded-md p-4">
+      <div className="flex animate-pulse w-full justify-between">
+        <div className="w-[23%] h-3 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-3 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-3 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-3 rounded bg-slate-700"></div>
+      </div>
+      <div className="flex animate-pulse w-full justify-between mt-4">
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+      </div>
+      <div className="flex animate-pulse w-full justify-between mt-4">
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+        <div className="w-[23%] h-2 rounded bg-slate-700"></div>
+      </div>
     </div>
   );
 }

@@ -5,13 +5,14 @@ import Navbar from "./components/Navbar";
 import AddProblem from "./pages/AddProblem";
 import Home from "./pages/Home";
 import ProblemPage from "./pages/ProblemPage";
+import Test from "./pages/test";
 import { asyncLogin } from "./store/authSlice";
 
 function App() {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(asyncLogin() as any)  
+    dispatch(asyncLogin() as any);
   }, []);
 
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/problem/:id" element={<ProblemPage />} />
         <Route path="/create" element={<AddProblem />} />
+        <Route path="/test" element={<Test />} />
       </Routes>
     </div>
   );

@@ -88,7 +88,7 @@ router.get("/submission/:id", verify, async (req, res) => {
 
 // Download Submission
 // TODO: Render the solution instead of downloading it/
-router.get("/download/:id", async (req, res) => {
+router.get("/content/:id", async (req, res) => {
   const id = req.params.id;
   if (!id) return res.status(400).json("Missing required fields");
 
