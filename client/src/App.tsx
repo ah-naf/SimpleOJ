@@ -22,7 +22,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/problem/:id" element={<ProblemPage />} />
         <Route path="/create" element={<AddProblem />} />
-        <Route path="/test" element={<Test />} />
+        
+        {/* This route was added for testing purpose */}
+        {/* <Route path="/test" element={<Test />} /> */}
       </Routes>
     </div>
   );
