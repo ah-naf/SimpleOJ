@@ -33,10 +33,6 @@ SimpleOJ uses Node.js child processes to execute C, C++, and Python code. The ex
 
 - **Complexity Analysis**: I aim to incorporate time and memory complexity analysis for running code. Resources and learning are underway for this implementation.
 
-Sure, I can update the "Local Setup" section of your README.md to include instructions for installing client and server dependencies using npm, and setting up the necessary environment variables for the backend. Here's the revised section:
-
----
-
 ## Local Setup
 
 To get SimpleOJ up and running on your local machine, follow these instructions:
@@ -68,9 +64,7 @@ To get SimpleOJ up and running on your local machine, follow these instructions:
 
 5. **Start the Application**:
    - From the root directory of the project, run `docker compose up` in the terminal. This will set up the necessary Docker containers.
-   - Optionally, you can run the client and server separately by navigating to their respective
-
-directories and executing `npm start` in each.
+   - Optionally, you can run the client and server separately by navigating to their respective directories and executing `npm start` in each.
 
 6. **Accessing SimpleOJ**:
    - Once everything is up and running, your local instance of SimpleOJ should be accessible. The client will typically run on `http://localhost:3000`, and the server will run on `http://localhost:5000`.
@@ -80,9 +74,6 @@ directories and executing `npm start` in each.
 - If you encounter any issues during the setup, ensure all the environment variables are correctly set and that Docker is running properly.
 - For any dependency-related issues, try removing the `node_modules` folder in the client and server directories, and run `npm install` again.
 
----
-
-This setup guide provides a comprehensive approach to getting your application running locally, including dependency installation and environment variable configuration.
 
 ## Support and Contact
 
