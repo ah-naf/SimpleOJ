@@ -15,7 +15,7 @@ export default function SingleSubmissionRow({
 
   const handleCodeFetch = () => {
     dispatch(asyncSubmissionContent((submission as any)._id) as any);
-    dispatch(setSubmissionId((submission as any)._id) as any);
+    dispatch(setSubmissionId((submission as any)) as any);
   };
 
   return (

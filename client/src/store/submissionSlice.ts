@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 const initialState: InitialStateType = {
   currentSubmission: "",
   submissionId: "",
+  language: "",
 };
 
 const URL = "http://localhost:5000/api";
@@ -25,7 +26,13 @@ export const SubmissionSlice = createSlice({
   initialState,
   reducers: {
     setSubmissionId: (state, { payload }) => {
-      state.submissionId = payload;
+      state.submissionId = payload._id;
+      state.language = payload.language;
+    },
+    clearSubmission: (state) => {
+      state.submissionId = "";
+      state.currentSubmission = "";
+      state.language = "";
     },
   },
   extraReducers: {
@@ -35,11 +42,12 @@ export const SubmissionSlice = createSlice({
   },
 });
 
-export const { setSubmissionId } = SubmissionSlice.actions;
+export const { setSubmissionId, clearSubmission } = SubmissionSlice.actions;
 
 export default SubmissionSlice.reducer;
 
 interface InitialStateType {
   submissionId: string;
   currentSubmission: string;
+  language: string;
 }

@@ -41,6 +41,12 @@ export default function CodeEditor({
   const dispatch = useDispatch();
   const location = useLocation().pathname.split("/")[2];
 
+  useEffect(() => {
+    if (disabled && editorRef.current) {
+      editorRef.current.setValue(codeStub[language]);
+    }
+  }, [disabled, codeStub, language]);
+
   // In CodeEditor component
   useEffect(() => {
     if (editorRef.current) {
@@ -67,28 +73,31 @@ export default function CodeEditor({
         gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
       });
     }
-    editorRef.current.setOption("readOnly", disabled ? "nocursor" : false);
-    const tempLang = localStorage.getItem(`${location}-language`) || language;
-    const tempStub =
-      JSON.parse(
-        localStorage.getItem(`${location}-${tempLang}-code`) as string
-      ) || codeStub[tempLang];
+    if (!disabled) {
+      editorRef.current.setOption("readOnly", disabled ? "nocursor" : false);
+      const tempLang = localStorage.getItem(`${location}-language`) || language;
+      const tempStub =
+        JSON.parse(
+          localStorage.getItem(`${location}-${tempLang}-code`) as string
+        ) || codeStub[tempLang];
 
-    editorRef.current?.getDoc().setValue(tempStub);
+      editorRef.current?.getDoc().setValue(tempStub);
 
-    editorRef.current.on("change", (instance, changes) => {
-      const code = instance.getValue();
-      if (onCodeChange) onCodeChange(code);
+      editorRef.current.on("change", (instance, changes) => {
+        const code = instance.getValue();
+        if (onCodeChange) onCodeChange(code);
 
-      if (changes.origin !== "setValue") {
-        dispatch(setCurrentCode(code));
-        const tempLang = localStorage.getItem(`${location}-language`) || "cpp";
-        localStorage.setItem(
-          `${location}-${tempLang}-code`,
-          JSON.stringify(code)
-        );
-      }
-    });
+        if (changes.origin !== "setValue") {
+          dispatch(setCurrentCode(code));
+          const tempLang =
+            localStorage.getItem(`${location}-language`) || "cpp";
+          localStorage.setItem(
+            `${location}-${tempLang}-code`,
+            JSON.stringify(code)
+          );
+        }
+      });
+    }
 
     return () => {
       // Cleanup if needed
