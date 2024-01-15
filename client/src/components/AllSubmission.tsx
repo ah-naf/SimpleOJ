@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { asyncSubmissionGet } from "../store/CodeSlice";
 import { RootState } from "../store/store";
 import SingleSubmissionRow from "./SingleSubmissionRow";
+import ShowSubmission from "./ShowSubmission";
 
 export default function AllSubmission() {
   const user = useSelector((state: RootState) => state.auth.user);
@@ -13,6 +14,8 @@ export default function AllSubmission() {
   const problem = useSelector(
     (state: RootState) => state.problem.singleProblem
   );
+ 
+
   const loading = useSelector((state: RootState) => state.code.loading);
 
   useEffect(() => {
@@ -34,21 +37,24 @@ export default function AllSubmission() {
       {loading ? (
         <Loading />
       ) : userSubmission.length ? (
-        <table className="table-auto w-full border shadow rounded">
-          <thead>
-            <tr className="h-12 text-lg font-sans">
-              <td className="pl-3 border">Time Submitted</td>
-              <td className="pl-3 border">Status</td>
-              <td className="pl-3 border">Runtime</td>
-              <td className="pl-3 border">Language</td>
-            </tr>
-          </thead>
-          <tbody>
-            {userSubmission.map((item, index) => (
-              <SingleSubmissionRow key={index} submission={item} />
-            ))}
-          </tbody>
-        </table>
+        <>
+          <table className="table-auto w-full border shadow rounded">
+            <thead>
+              <tr className="h-12 text-lg font-sans">
+                <td className="pl-3 border">Time Submitted</td>
+                <td className="pl-3 border">Status</td>
+                <td className="pl-3 border">Runtime</td>
+                <td className="pl-3 border">Language</td>
+              </tr>
+            </thead>
+            <tbody>
+              {userSubmission.map((item, index) => (
+                <SingleSubmissionRow key={index} submission={item} />
+              ))}
+            </tbody>
+          </table>
+          <ShowSubmission />
+        </>
       ) : (
         <div>
           <p className="font-mono text-lg">No Previous Submission Found.</p>
