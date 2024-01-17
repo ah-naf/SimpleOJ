@@ -1,10 +1,9 @@
-import { Modal, useModal, Button, Checkbox } from "@nextui-org/react";
+import { Button, Checkbox, Modal, useModal } from "@nextui-org/react";
 import MDEditor from "@uiw/react-md-editor";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import rehypeSanitize from "rehype-sanitize";
 import { addTestcase } from "../store/ProblemSlice";
-import { RootState } from "../store/store";
 
 export default function TestcaseModal() {
   const { setVisible, bindings } = useModal();
@@ -18,8 +17,8 @@ export default function TestcaseModal() {
 
   const handleAdd = () => {
     dispatch(addTestcase(value));
-    setVisible(false)
-    setValue({input: '', output: '', sample: false, explanation: ''})
+    setVisible(false);
+    setValue({ input: "", output: "", sample: false, explanation: "" });
   };
 
   return (
