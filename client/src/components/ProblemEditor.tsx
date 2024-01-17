@@ -1,13 +1,12 @@
 import { Loading } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { asyncProgrammemRun, asyncProgrammemSubmit } from "../store/CodeSlice";
 import { useGetProblemStatusQuery } from "../store/services/ProblemStatus";
 import { RootState } from "../store/store";
 import Editor from "./Editor";
-import SubmissionCode from "./SubmissionCode";
 
 export default function ProblemEditor() {
   const [bottomDrawer, setBottomDrawer] = useState("input");
@@ -31,7 +30,7 @@ export default function ProblemEditor() {
   useEffect(() => {
     setJobId(JobId);
   }, [JobId]);
- 
+
   // Status polling
   const problemData = useGetProblemStatusQuery(
     jobId,
@@ -54,8 +53,6 @@ export default function ProblemEditor() {
       }
     }
   }, [problemData.data]);
-
-
 
   const handleRun = async () => {
     setSkip(false);

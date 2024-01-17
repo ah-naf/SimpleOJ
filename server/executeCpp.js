@@ -15,15 +15,19 @@ const executeCpp = (filepath, userInput) => {
 
     const compileProcess = spawn("g++", [filepath, "-o", outPath]);
 
+    let compileError = ""; // Variable to store the compilation error message
+
     compileProcess.on("error", (error) => {
-      console.error(`Compilation error: ${error.message}`);
       reject(error);
+    });
+
+    compileProcess.stderr.on("data", (data) => {
+      compileError += data.toString();
     });
 
     compileProcess.on("close", (code) => {
       if (code !== 0) {
-        console.error(`Compilation process exited with code ${code}`);
-        reject(new Error(`Compilation process exited with code ${code}`));
+        reject(new Error(`Compilation failed: ${compileError}`)); // Reject with the compilation error
         return;
       }
       const executeProcess = spawn("./outputs/" + jobId + ".out");
@@ -38,12 +42,10 @@ const executeCpp = (filepath, userInput) => {
       });
 
       executeProcess.on("error", (error) => {
-        console.error(`Execution error: ${error.message}`);
         reject(error);
       });
 
       executeProcess.on("close", (code) => {
-        console.log(`Child Process exited with code ${code}`);
         resolve(output);
       });
     });

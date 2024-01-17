@@ -9,12 +9,16 @@ const jobQueue = new Queue("job-queue", {
 });
 
 async function executeJob(job) {
-  const userInput = job.userInput;
-  job = job._doc;
-  if (job.language === "cpp" || job.language === "c") {
-    return executeCpp(job.filepath, userInput || "");
-  } else {
-    return executePy(job.filepath, userInput || "");
+  try {
+    const userInput = job.userInput;
+    job = job._doc;
+    if (job.language === "cpp" || job.language === "c") {
+      return executeCpp(job.filepath, userInput || "");
+    } else {
+      return executePy(job.filepath, userInput || "");
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
 
@@ -37,8 +41,18 @@ async function processSubmission(job) {
   const problem = await Problem.findById(job.problemId);
   if (!problem) throw new Error(`Cannot find problem with id ${job.problemId}`);
 
-  const passed = await checkTestcases(job, problem.testcase);
-  job.verdict = passed ? "ac" : job.verdict || "wa";
+  const startTime = new Date().getTime(); // Start time for execution
+  let passed = await checkTestcases(job, problem.testcase);
+  const endTime = new Date().getTime(); // End time for execution
+
+  const executionTime = endTime - startTime; // Calculate execution time
+  if (executionTime > problem.timelimit) {
+    job.verdict = "tle"; // Set verdict as TLE if execution time exceeds the limit
+    passed = false;
+  } else {
+    job.verdict = passed ? "ac" : job.verdict || "wa"; // Set verdict based on test case results
+  }
+
   if (passed) updateProblemSolvers(problem, job.userId);
 }
 
