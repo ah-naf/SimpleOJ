@@ -75,7 +75,7 @@ To get SimpleOJ up and running on your local machine, follow these instructions:
 
 - If you encounter any issues during the setup, ensure all the environment variables are correctly set and that Docker is running properly.
 - For any dependency-related issues, try removing the `node_modules` folder in the client and server directories, and run `npm install` again.
-
+gi
 ## Support and Contact
 
 For any assistance or inquiries, feel free to connect with me on [LinkedIn](https://linkedin.com/in/ahnafhasan144).

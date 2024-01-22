@@ -22,8 +22,11 @@ function ProblemPage() {
 
   useEffect(() => {
     dispatch(asyncSingleProblemGet(location) as any);
+  }, [location]);
+
+  useEffect(() => {
     if (user) dispatch(asyncSubmissionGet(location) as any);
-  }, [user, location]);
+  }, [user, location, searchParams]);
 
   return (
     <div className="flex">
@@ -40,7 +43,6 @@ function ProblemPage() {
                 className={`h-1/2 w-full relative py-2 ${
                   drawer === "submission" && "shadow bg-gray-300/50 rounded "
                 }`}
-                // onClick={() => dispatch(setDrawer("description"))}
                 onClick={() =>
                   navigate(`/problem/${location}?drawer=description`)
                 }
@@ -54,7 +56,6 @@ function ProblemPage() {
                   (drawer === "description" || !drawer) &&
                   "shadow bg-gray-300/50 rounded"
                 }`}
-                // onClick={() => dispatch(setDrawer("submission"))}
                 onClick={() =>
                   navigate(`/problem/${location}?drawer=submission`)
                 }
