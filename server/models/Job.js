@@ -15,7 +15,7 @@ const JobSchema = new mongoose.Schema({
     default: Date.now,
   },
   userInput: {
-    type: String
+    type: String,
   },
   startedAt: {
     type: Date,
@@ -32,10 +32,16 @@ const JobSchema = new mongoose.Schema({
     type: String,
   },
   verdict: {
-    type: String
+    type: String,
   },
-  userId: {type: String},
-  problemId: {type: String}
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  problemId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Problem",
+  },
 });
 
 module.exports = mongoose.model("Job", JobSchema);

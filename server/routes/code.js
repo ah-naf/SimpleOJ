@@ -68,7 +68,31 @@ router.get("/status/:id", async (req, res) => {
   }
 });
 
-// Get All Submission
+// Get all submission
+router.get("/submissions", async (req, res) => {
+  try {
+    const submissions = await Job.find({
+      status: "success",
+      verdict: { $exists: true },
+    })
+      .populate({
+        path: "userId",
+        select: "email", // Selecting only the email field from the User document
+      })
+      .populate({
+        path: "problemId",
+        select: "title", // Selecting only the title field from the Problem document
+      })
+      .sort({ submittedAt: -1 })
+      .select("status language submittedAt verdict completedAt startedAt");
+
+    return res.status(200).json(submissions);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+});
+
+// Get All User Submission
 router.get("/submission/:id", verify, async (req, res) => {
   const userId = req.user._id;
   const problemId = req.params.id;
@@ -80,6 +104,7 @@ router.get("/submission/:id", verify, async (req, res) => {
       problemId,
       verdict: { $exists: true },
     }).sort({ submittedAt: -1 });
+    // console.log(submissions)
     res.status(200).json(submissions);
   } catch (error) {
     return res.status(500).json(error);
@@ -87,7 +112,6 @@ router.get("/submission/:id", verify, async (req, res) => {
 });
 
 // Download Submission
-// TODO: Render the solution instead of downloading it/
 router.get("/content/:id", async (req, res) => {
   const id = req.params.id;
   if (!id) return res.status(400).json("Missing required fields");

@@ -31,6 +31,6 @@ const ProblemSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-const Problem = mongoose.model("problem", ProblemSchema);
+const Problem = mongoose.model("Problem", ProblemSchema);
 
 module.exports = Problem;
