@@ -14,7 +14,8 @@ For a visual demonstration of SimpleOJ in action, check out our [video demo](htt
 - **Problem Management**: Authenticated users can add, edit, and delete programming problems, complete with custom test cases.
 - **Code Execution**: All users can run their code on the problem page. Code submissions and verifications are available for signed-in users.
 - **Submission Feedback**: After submitting code, users receive immediate feedback on whether their solution is accepted, incorrect, or has timed out (TLE).
-- **History and Downloads**: Users can view their past submissions for each problem and download their code.
+- **History**: Users can view their past submissions for each problem and view their code.
+- **Status**: Users can see everyones recent submissions.
 
 ### Running Code
 
@@ -31,7 +32,7 @@ SimpleOJ uses Node.js child processes to execute C, C++, and Python code. The ex
 
 ### Future Goals
 
-- **Complexity Analysis**: I aim to incorporate time and memory complexity analysis for running code. Resources and learning are underway for this implementation.
+- **Complexity Analysis**: I aim to incorporate memory complexity analysis for running code. Resources and learning are underway for this implementation.
 
 ## Local Setup
 
@@ -63,6 +64,7 @@ To get SimpleOJ up and running on your local machine, follow these instructions:
      Replace `your_google_client_id` and `your_google_client_secret` with your actual Google client ID and secret.
 
 5. **Start the Application**:
+
    - From the root directory of the project, run `docker compose up` in the terminal. This will set up the necessary Docker containers.
    - Optionally, you can run the client and server separately by navigating to their respective directories and executing `npm start` in each.
 
@@ -73,7 +75,6 @@ To get SimpleOJ up and running on your local machine, follow these instructions:
 
 - If you encounter any issues during the setup, ensure all the environment variables are correctly set and that Docker is running properly.
 - For any dependency-related issues, try removing the `node_modules` folder in the client and server directories, and run `npm install` again.
-
 
 ## Support and Contact
 

@@ -77,11 +77,9 @@ router.get("/submissions", async (req, res) => {
     })
       .populate({
         path: "userId",
-        select: "email", // Selecting only the email field from the User document
       })
       .populate({
         path: "problemId",
-        select: "title", // Selecting only the title field from the Problem document
       })
       .sort({ submittedAt: -1 })
       .select("status language submittedAt verdict completedAt startedAt");
@@ -103,8 +101,16 @@ router.get("/submission/:id", verify, async (req, res) => {
       userId,
       problemId,
       verdict: { $exists: true },
-    }).sort({ submittedAt: -1 });
-    // console.log(submissions)
+    })
+      .populate({
+        path: "userId",
+      })
+      .populate({
+        path: "problemId",
+      })
+      .sort({ submittedAt: -1 })
+      .select("status language submittedAt verdict completedAt startedAt");
+
     res.status(200).json(submissions);
   } catch (error) {
     return res.status(500).json(error);

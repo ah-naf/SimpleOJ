@@ -5,7 +5,7 @@ import Navbar from "./components/Navbar";
 import AddProblem from "./pages/AddProblem";
 import Home from "./pages/Home";
 import ProblemPage from "./pages/ProblemPage";
-import Test from "./pages/test";
+import Status from "./pages/Status";
 import { asyncLogin } from "./store/authSlice";
 
 function App() {
@@ -22,7 +22,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/problem/:id" element={<ProblemPage />} />
         <Route path="/create" element={<AddProblem />} />
-        
+        <Route path="/status" element={<Status />} />
         {/* This route was added for testing purpose */}
         {/* <Route path="/test" element={<Test />} /> */}
       </Routes>

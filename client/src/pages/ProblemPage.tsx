@@ -1,11 +1,13 @@
 import { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import AllSubmission from "../components/AllSubmission";
 import ProblemEditor from "../components/ProblemEditor";
 import ProblemStatement from "../components/ProblemStatement";
+import { asyncSubmissionGet } from "../store/CodeSlice";
 import { asyncSingleProblemGet } from "../store/ProblemSlice";
+import { RootState } from "../store/store";
 
 function ProblemPage() {
   const dispatch = useDispatch();
@@ -13,10 +15,15 @@ function ProblemPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const drawer = searchParams.get("drawer");
+  const user = useSelector((state: RootState) => state.auth.user);
+  const submissions = useSelector(
+    (state: RootState) => state.code.userSubmission
+  );
 
   useEffect(() => {
     dispatch(asyncSingleProblemGet(location) as any);
-  }, []);
+    if (user) dispatch(asyncSubmissionGet(location) as any);
+  }, [user, location]);
 
   return (
     <div className="flex">
@@ -61,7 +68,7 @@ function ProblemPage() {
               {drawer === "description" || !drawer ? (
                 <ProblemStatement />
               ) : (
-                <AllSubmission />
+                <AllSubmission submissions={submissions} />
               )}
             </div>
           </div>

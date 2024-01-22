@@ -1,28 +1,20 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { asyncSubmissionGet } from "../store/CodeSlice";
+import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import SingleSubmissionRow from "./SingleSubmissionRow";
+import { UserSubmissionType } from "../utils/type";
 import ShowSubmission from "./ShowSubmission";
+import SingleSubmissionRow from "./SingleSubmissionRow";
 
-export default function AllSubmission() {
+export default function AllSubmission({
+  submissions,
+  all = false,
+}: {
+  submissions: UserSubmissionType[];
+  all?: boolean;
+}) {
   const user = useSelector((state: RootState) => state.auth.user);
-  const dispatch = useDispatch();
-  const userSubmission = useSelector(
-    (state: RootState) => state.code.userSubmission
-  );
-  const problem = useSelector(
-    (state: RootState) => state.problem.singleProblem
-  );
- 
-
   const loading = useSelector((state: RootState) => state.code.loading);
 
-  useEffect(() => {
-    if (user && problem) dispatch(asyncSubmissionGet(problem?._id) as any);
-  }, [user, problem]);
-
-  if (!user)
+  if (!user && !all)
     return (
       <div className="grid place-items-center">
         <h1 className="text-3xl">Login to see your previous submission</h1>
@@ -31,24 +23,28 @@ export default function AllSubmission() {
 
   return (
     <div className="max-w-5xl m-auto">
-      <h3 className="text-gray-600 mb-4">
-        {user.displayName + "'s"} Submission
-      </h3>
+      {!all && user && (
+        <h3 className="text-gray-600 mb-4">
+          {user.displayName + "'s"} Submission
+        </h3>
+      )}
       {loading ? (
         <Loading />
-      ) : userSubmission.length ? (
+      ) : submissions.length ? (
         <>
           <table className="table-auto w-full border shadow rounded">
             <thead>
               <tr className="h-12 text-lg font-sans">
                 <td className="pl-3 border">Time Submitted</td>
+                <td className="pl-3 border">User</td>
+                <td className="pl-3 border">Problem</td>
                 <td className="pl-3 border">Status</td>
                 <td className="pl-3 border">Runtime</td>
                 <td className="pl-3 border">Language</td>
               </tr>
             </thead>
             <tbody>
-              {userSubmission.map((item, index) => (
+              {submissions.map((item, index) => (
                 <SingleSubmissionRow key={index} submission={item} />
               ))}
             </tbody>
