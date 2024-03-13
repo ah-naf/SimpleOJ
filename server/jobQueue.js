@@ -61,6 +61,8 @@ async function processJob(jobId) {
   if (!job) throw new Error(`Cannot find job with id ${jobId}`);
 
   job.startedAt = new Date();
+  job.status = "running";
+  await job.save();
   try {
     if (job.problemId) {
       await processSubmission(job);
@@ -89,12 +91,15 @@ jobQueue.on("failed", (error) => {
 
 module.exports = {
   addJobToQueue: async (jobId) => {
+    const job = await Job.findById(jobId);
+    job.status = "in queue"; // Set the verdict to "in queue"
+    await job.save(); // Save the updated job
     await jobQueue.add({ id: jobId });
   },
   addSubmitToQueue: async (jobId, problemId, userId) => {
     const job = await Job.findById(jobId);
     if (!job) throw new Error(`Cannot find job with id ${jobId}`);
-    Object.assign(job, { problemId, userId });
+    Object.assign(job, { problemId, userId, status: "in queue" }); // Include the "in queue" verdict here as well
     await job.save();
     await jobQueue.add({ id: jobId });
   },

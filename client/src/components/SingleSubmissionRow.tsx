@@ -12,7 +12,7 @@ export default function SingleSubmissionRow({
   submission: UserSubmissionType;
 }) {
   const dispatch = useDispatch();
-  // console.log(submission)
+  console.log(submission);
   const handleCodeFetch = () => {
     dispatch(asyncSubmissionContent((submission as any)._id) as any);
     dispatch(setSubmissionId(submission as any) as any);
@@ -24,8 +24,8 @@ export default function SingleSubmissionRow({
         <td className="pl-3 border">
           {moment(submission.submittedAt).format("LLL")}
         </td>
-        <td className="pl-3 border">{submission.userId.email}</td>
-        <td className="pl-3 border">{submission.problemId.slug}</td>
+        <td className="pl-3 border">{submission.userId?.email}</td>
+        <td className="pl-3 border">{submission.problemId?.slug}</td>
         <td
           className={`pl-3 border ${
             submission.verdict === "ac" ? "text-green-600" : "text-red-600"

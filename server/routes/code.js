@@ -60,7 +60,7 @@ router.get("/status/:id", async (req, res) => {
 
   try {
     const job = await Job.findById(req.params.id);
-
+    console.log(job);
     res.status(200).json({ job, success: true });
   } catch (error) {
     console.log(error);

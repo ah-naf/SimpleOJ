@@ -188,11 +188,12 @@ export default function ProblemEditor() {
               </div>
             ) : (
               <div className="w-full h-full bg-white rounded shadow">
-                {drawerState.status === "in queue" ? (
+                {drawerState.status === "in queue" ||
+                drawerState.status === "running" ? (
                   <div className="w-full h-full flex flex-col items-center justify-center">
                     <Loading size="xl" type="points-opacity" />
                     <span className="font-mono mt-2 font-bold text-blue-600">
-                      Submission is in queue...
+                      Submission is {drawerState.status}...
                     </span>
                   </div>
                 ) : (
