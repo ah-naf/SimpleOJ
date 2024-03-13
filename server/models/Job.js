@@ -26,7 +26,7 @@ const JobSchema = new mongoose.Schema({
   status: {
     type: String,
     default: "in queue",
-    enum: ["in queue", "success", "error"],
+    enum: ["in queue", "success", "c_error", "running", "r_error"], // c_error -> Compilation Error, r_error -> Runtime Error
   },
   output: {
     type: String,

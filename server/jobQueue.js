@@ -1,8 +1,10 @@
 const Queue = require("bull");
 const Job = require("./models/Job");
-const { executeCpp } = require("./executeCpp");
+const { executeCpp } = require("./ExecuteCode/executeCpp");
 const Problem = require("./models/Problem");
-const { executePy } = require("./executePy");
+const { executePy } = require("./ExecuteCode/executePy");
+
+const CONCURRENCY_LEVEL = 4;
 
 const jobQueue = new Queue("job-queue", {
   redis: { host: "redis", port: 6379 },
@@ -46,7 +48,7 @@ async function processSubmission(job) {
   const endTime = new Date().getTime(); // End time for execution
 
   const executionTime = endTime - startTime; // Calculate execution time
-  if (executionTime > problem.timelimit * 1000) {
+  if ((executionTime / 2) > problem.timelimit * 1000) {
     job.verdict = "tle"; // Set verdict as TLE if execution time exceeds the limit
     passed = false;
   } else {
@@ -61,6 +63,8 @@ async function processJob(jobId) {
   if (!job) throw new Error(`Cannot find job with id ${jobId}`);
 
   job.startedAt = new Date();
+  job.status = "running";
+  await job.save();
   try {
     if (job.problemId) {
       await processSubmission(job);
@@ -72,14 +76,14 @@ async function processJob(jobId) {
     job.status = "success";
   } catch (err) {
     job.completedAt = new Date();
-    job.status = "error";
+    job.status = err.type;
     job.output = err.message;
   } finally {
     await job.save();
   }
 }
 
-jobQueue.process(async ({ data }) => {
+jobQueue.process(CONCURRENCY_LEVEL, async ({ data }) => {
   await processJob(data.id);
 });
 
@@ -89,12 +93,15 @@ jobQueue.on("failed", (error) => {
 
 module.exports = {
   addJobToQueue: async (jobId) => {
+    const job = await Job.findById(jobId);
+    job.status = "in queue"; // Set the verdict to "in queue"
+    await job.save(); // Save the updated job
     await jobQueue.add({ id: jobId });
   },
   addSubmitToQueue: async (jobId, problemId, userId) => {
     const job = await Job.findById(jobId);
     if (!job) throw new Error(`Cannot find job with id ${jobId}`);
-    Object.assign(job, { problemId, userId });
+    Object.assign(job, { problemId, userId, status: "in queue" }); // Include the "in queue" verdict here as well
     await job.save();
     await jobQueue.add({ id: jobId });
   },

@@ -1,8 +1,13 @@
-import { useSelector } from "react-redux";
+import { Table } from "@nextui-org/react";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
+import {
+  asyncSubmissionContent,
+  setSubmissionId,
+} from "../store/submissionSlice";
 import { UserSubmissionType } from "../utils/type";
 import ShowSubmission from "./ShowSubmission";
-import SingleSubmissionRow from "./SingleSubmissionRow";
 
 export default function AllSubmission({
   submissions,
@@ -14,6 +19,13 @@ export default function AllSubmission({
   const user = useSelector((state: RootState) => state.auth.user);
   const loading = useSelector((state: RootState) => state.code.loading);
 
+  const dispatch = useDispatch();
+
+  const handleCodeFetch = (sub: UserSubmissionType) => {
+    dispatch(asyncSubmissionContent((sub as any)._id) as any);
+    dispatch(setSubmissionId(sub as any) as any);
+  };
+
   if (!user && !all)
     return (
       <div className="grid place-items-center">
@@ -22,7 +34,7 @@ export default function AllSubmission({
     );
 
   return (
-    <div className="max-w-5xl m-auto">
+    <div className="max-w-6xl m-auto">
       {!all && user && (
         <h3 className="text-gray-600 mb-4">
           {user.displayName + "'s"} Submission
@@ -32,23 +44,174 @@ export default function AllSubmission({
         <Loading />
       ) : submissions.length ? (
         <>
-          <table className="table-auto w-full border shadow rounded">
-            <thead>
-              <tr className="h-12 text-lg font-sans">
-                <td className="pl-3 border">Time Submitted</td>
-                <td className="pl-3 border">User</td>
-                <td className="pl-3 border">Problem</td>
-                <td className="pl-3 border">Status</td>
-                <td className="pl-3 border">Runtime</td>
-                <td className="pl-3 border">Language</td>
-              </tr>
-            </thead>
-            <tbody>
-              {submissions.map((item, index) => (
-                <SingleSubmissionRow key={index} submission={item} />
+          <Table
+            lined
+            shadow
+            aria-label="All submissions"
+            css={{ height: "auto", minWidth: "100%" }}
+            className="table-auto w-full border shadow rounded"
+          >
+            <Table.Header>
+              <Table.Column
+                css={{
+                  fontSize: "$lg",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                  color: "$gray800",
+                  fontFamily: "Mukta",
+                }}
+              >
+                Time Submitted
+              </Table.Column>
+              <Table.Column
+                css={{
+                  fontSize: "$lg",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                  color: "$gray800",
+                  fontFamily: "Mukta",
+                }}
+              >
+                User
+              </Table.Column>
+              <Table.Column
+                css={{
+                  fontSize: "$lg",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                  color: "$gray800",
+                  fontFamily: "Mukta",
+                }}
+              >
+                Problem
+              </Table.Column>
+              <Table.Column
+                css={{
+                  fontSize: "$lg",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                  color: "$gray800",
+                  fontFamily: "Mukta",
+                }}
+              >
+                Status
+              </Table.Column>
+              <Table.Column
+                css={{
+                  fontSize: "$lg",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                  color: "$gray800",
+                  fontFamily: "Mukta",
+                }}
+              >
+                Runtime
+              </Table.Column>
+              <Table.Column
+                css={{
+                  fontSize: "$lg",
+                  paddingTop: "15px",
+                  paddingBottom: "15px",
+                  color: "$gray800",
+                  fontFamily: "Mukta",
+                }}
+              >
+                Language
+              </Table.Column>
+            </Table.Header>
+            <Table.Body>
+              {submissions.map((submission, index) => (
+                <Table.Row key={index}>
+                  <Table.Cell
+                    css={{
+                      fontFamily: "Ubuntu Mono",
+                      paddingTop: "12px",
+                      fontSize: "18px",
+                      paddingBottom: "12px",
+                    }}
+                  >
+                    {moment(submission.submittedAt).format("LLL")}
+                  </Table.Cell>
+                  <Table.Cell
+                    css={{
+                      fontFamily: "Ubuntu Mono",
+                      paddingTop: "12px",
+                      fontSize: "18px",
+                      paddingBottom: "12px",
+                    }}
+                  >
+                    {submission.userId?.email}
+                  </Table.Cell>
+                  <Table.Cell
+                    css={{
+                      fontFamily: "Ubuntu Mono",
+                      paddingTop: "12px",
+                      fontSize: "18px",
+                      paddingBottom: "12px",
+                    }}
+                  >
+                    {submission.problemId?.slug}
+                  </Table.Cell>
+                  <Table.Cell
+                    css={{
+                      fontFamily: "Ubuntu Mono",
+                      paddingTop: "12px",
+                      fontSize: "18px",
+                      paddingBottom: "12px",
+                    }}
+                  >
+                    <button
+                      className={`${
+                        submission.status === "in queue" ||
+                        submission.status === "running"
+                          ? "text-blue-600" // Blue color for "in queue" and "running" status
+                          : submission.verdict === "ac"
+                          ? "text-green-600" // Green color for "Accepted" verdict
+                          : "text-red-600" // Red color for other verdicts
+                      } font-bold underline cursor-pointer`}
+                      onClick={() => handleCodeFetch(submission)}
+                    >
+                      <span className="capitalize">
+                        {renderStatus(submission)}
+                      </span>
+                    </button>
+                  </Table.Cell>
+                  <Table.Cell
+                    css={{
+                      fontFamily: "Ubuntu Mono",
+                      paddingTop: "12px",
+                      fontSize: "18px",
+                      paddingBottom: "12px",
+                    }}
+                  >
+                    {moment(submission.completedAt).diff(
+                      moment(submission.startedAt),
+                      "seconds",
+                      true
+                    ) / 2}
+                  </Table.Cell>
+                  <Table.Cell
+                    css={{
+                      fontFamily: "Ubuntu Mono",
+                      paddingTop: "12px",
+                      fontSize: "18px",
+                      paddingBottom: "12px",
+                    }}
+                  >
+                    {renderLanguage(submission.language)}
+                  </Table.Cell>
+                </Table.Row>
               ))}
-            </tbody>
-          </table>
+            </Table.Body>
+            <Table.Pagination
+              color={"secondary"}
+              shadow
+              noMargin
+              align="center"
+              rowsPerPage={12}
+              onPageChange={(page) => console.log({ page })}
+            />
+          </Table>
           <ShowSubmission />
         </>
       ) : (
@@ -83,4 +246,36 @@ function Loading() {
       </div>
     </div>
   );
+}
+
+function renderLanguage(language: string) {
+  switch (language) {
+    case "cpp":
+      return "C++";
+    case "c":
+      return "C";
+    case "py":
+      return "Python";
+    default:
+      return language;
+  }
+}
+
+function renderStatus(submission: { status?: string; verdict?: string }) {
+  if (submission.status === "c_error") {
+    return "Compilation Error";
+  } else if (submission.status === "r_error") {
+    return "Runtime Error";
+  } else if (submission.status === "success") {
+    switch (submission.verdict) {
+      case "ac":
+        return "Accepted";
+      case "wa":
+        return "Wrong Answer";
+      default:
+        return "Time Limit Exceed";
+    }
+  } else {
+    return submission.status; // For any other status
+  }
 }

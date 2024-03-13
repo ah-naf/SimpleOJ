@@ -155,7 +155,7 @@ export default function ProblemEditor() {
           <div className="bg-gray-100 flex-grow flex flex-col items-end p-4 pt-2 min-h-[125px]">
             {drawerState.bottomDrawer === "input" ? (
               <textarea
-                className="bg-white flex-grow w-full border outline-none p-2 text-xs font-bold rounded-sm shadow"
+                className="bg-white flex-grow w-full border outline-none p-2 font-bold rounded-sm shadow"
                 value={drawerState.userInput}
                 onChange={(e) => handleInputChange(e.target.value)}
               ></textarea>
@@ -188,16 +188,17 @@ export default function ProblemEditor() {
               </div>
             ) : (
               <div className="w-full h-full bg-white rounded shadow">
-                {drawerState.status === "in queue" ? (
+                {drawerState.status === "in queue" ||
+                drawerState.status === "running" ? (
                   <div className="w-full h-full flex flex-col items-center justify-center">
                     <Loading size="xl" type="points-opacity" />
                     <span className="font-mono mt-2 font-bold text-blue-600">
-                      Submission is in queue...
+                      Submission is {drawerState.status}...
                     </span>
                   </div>
                 ) : (
                   <textarea
-                    className="font-mono text-sm p-2 h-full w-full px-4 outline-none textarea"
+                    className="font-mono text p-2 h-full w-full px-4 outline-none textarea"
                     value={drawerState.output}
                     readOnly
                   ></textarea>

@@ -23,10 +23,10 @@ function ProblemPage() {
   useEffect(() => {
     dispatch(asyncSingleProblemGet(location) as any);
   }, [location]);
-
+  
   useEffect(() => {
     if (user) dispatch(asyncSubmissionGet(location) as any);
-  }, [user, location, searchParams]);
+  }, [user, location, drawer]);
 
   return (
     <div className="flex">

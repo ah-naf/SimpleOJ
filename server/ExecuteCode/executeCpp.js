@@ -18,7 +18,7 @@ const executeCpp = (filepath, userInput) => {
     let compileError = ""; // Variable to store the compilation error message
 
     compileProcess.on("error", (error) => {
-      reject(error);
+      reject({ type: "c_error", message: error.message });
     });
 
     compileProcess.stderr.on("data", (data) => {
@@ -27,25 +27,42 @@ const executeCpp = (filepath, userInput) => {
 
     compileProcess.on("close", (code) => {
       if (code !== 0) {
-        reject(new Error(`Compilation failed: ${compileError}`)); // Reject with the compilation error
+        reject({
+          type: "c_error",
+          message: `Compilation Failed:\n${compileError}`,
+        }); // Reject with the compilation error
         return;
       }
-      const executeProcess = spawn("./outputs/" + jobId + ".out");
+      const executeProcess = spawn(outPath);
 
       executeProcess.stdin.write(userInput);
       executeProcess.stdin.end();
 
       let output = "";
+      let runtimeError = "";
 
       executeProcess.stdout.on("data", (data) => {
         output += data.toString();
       });
 
+      executeProcess.stderr.on("data", (data) => {
+        runtimeError += data.toString();
+      });
+
       executeProcess.on("error", (error) => {
-        reject(error);
+        reject({ type: "r_error", message: error.message });
       });
 
       executeProcess.on("close", (code) => {
+        if (code !== 0) {
+          reject({
+            type: "r_error",
+            message: `Executation Failed:\n${
+              runtimeError || "Unknown runtime error"
+            }`,
+          });
+          return;
+        }
         resolve(output);
       });
     });
