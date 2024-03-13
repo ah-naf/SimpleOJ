@@ -32,13 +32,7 @@ export default function SingleSubmissionRow({
           } font-bold underline cursor-pointer`}
         >
           <button className="hover:underline" onClick={handleCodeFetch}>
-            <span>
-              {submission.verdict === "ac"
-                ? "Accpeted"
-                : submission.verdict === "wa"
-                ? "Wrong Answer"
-                : "Time Limit Exceed"}
-            </span>
+            <span className="capitalize">{renderStatus(submission)}</span>
           </button>
         </td>
         <td className="pl-3 border">
@@ -46,10 +40,29 @@ export default function SingleSubmissionRow({
             moment(submission.startedAt),
             "seconds",
             true
-          )}
+          )/2}
         </td>
         <td className="pl-3 border">{submission.language}</td>
       </tr>
     </>
   );
+}
+
+function renderStatus(submission: { status?: string; verdict?: string }) {
+  if (submission.status === "c_error") {
+    return "Compilation Error";
+  } else if (submission.status === "r_error") {
+    return "Runtime Error";
+  } else if (submission.status === "success") {
+    switch (submission.verdict) {
+      case "ac":
+        return "Accepted";
+      case "wa":
+        return "Wrong Answer";
+      default:
+        return "Time Limit Exceed";
+    }
+  } else {
+    return submission.status; // For any other status
+  }
 }

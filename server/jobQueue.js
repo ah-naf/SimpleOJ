@@ -46,7 +46,7 @@ async function processSubmission(job) {
   const endTime = new Date().getTime(); // End time for execution
 
   const executionTime = endTime - startTime; // Calculate execution time
-  if (executionTime > problem.timelimit * 1000) {
+  if ((executionTime / 2) > problem.timelimit * 1000) {
     job.verdict = "tle"; // Set verdict as TLE if execution time exceeds the limit
     passed = false;
   } else {
@@ -74,7 +74,7 @@ async function processJob(jobId) {
     job.status = "success";
   } catch (err) {
     job.completedAt = new Date();
-    job.status = "error";
+    job.status = err.type;
     job.output = err.message;
   } finally {
     await job.save();

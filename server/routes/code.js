@@ -60,7 +60,7 @@ router.get("/status/:id", async (req, res) => {
 
   try {
     const job = await Job.findById(req.params.id);
-    console.log(job);
+    // console.log(job);
     res.status(200).json({ job, success: true });
   } catch (error) {
     console.log(error);
@@ -72,8 +72,7 @@ router.get("/status/:id", async (req, res) => {
 router.get("/submissions", async (req, res) => {
   try {
     const submissions = await Job.find({
-      status: "success",
-      verdict: { $exists: true },
+      problemId: { $exists: true },
     })
       .populate({
         path: "userId",
@@ -84,6 +83,7 @@ router.get("/submissions", async (req, res) => {
       .sort({ submittedAt: -1 })
       .select("status language submittedAt verdict completedAt startedAt");
 
+      console.log(submissions)
     return res.status(200).json(submissions);
   } catch (error) {
     return res.status(500).json(error);
