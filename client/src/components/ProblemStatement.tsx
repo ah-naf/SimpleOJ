@@ -84,8 +84,12 @@ export default function ProblemStatement() {
               </svg>
             </button>
           </div>
-          <h1 className="text-3xl py-3 border-b capitalize mb-8 text-center">
+          <h1 className="text-3xl grid place-content-center py-3 border-b capitalize mb-8 text-center">
             {problem?.title}
+
+            <span className="text-sm font-medium text-gray-700 mt-1  tracking-wider">
+              Time Limit: {problem?.timelimit}s
+            </span>
           </h1>
           <div>
             <h2 className="text-lg text-gray-800 mb-2">Problem Statement</h2>
@@ -114,7 +118,9 @@ export default function ProblemStatement() {
             sampleTestcase.map((item, index) => (
               <div key={index}>
                 <div className="my-6">
-                  <h2 className="text-lg text-gray-800 mb-2">Sample Input {index + 1}</h2>
+                  <h2 className="text-lg text-gray-800 mb-2">
+                    Sample Input {index + 1}
+                  </h2>
                   <p className="whitespace-pre-wrap bg-slate-300/50 p-4 rounded font-mono text-lg relative">
                     {item.input}
                     <button
@@ -126,7 +132,9 @@ export default function ProblemStatement() {
                   </p>
                 </div>
                 <div className="my-6">
-                  <h2 className="text-lg text-gray-800 mb-2">Sample Output {index + 1}</h2>
+                  <h2 className="text-lg text-gray-800 mb-2">
+                    Sample Output {index + 1}
+                  </h2>
                   <p className="whitespace-pre-wrap bg-slate-300/50 p-4 rounded font-mono text-lg">
                     {item.output}
                   </p>

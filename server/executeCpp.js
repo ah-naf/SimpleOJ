@@ -29,7 +29,7 @@ const executeCpp = (filepath, userInput) => {
       if (code !== 0) {
         reject({
           type: "c_error",
-          message: `Compilation Failed: ${compileError}`,
+          message: `Compilation Failed:\n${compileError}`,
         }); // Reject with the compilation error
         return;
       }
@@ -57,7 +57,7 @@ const executeCpp = (filepath, userInput) => {
         if (code !== 0) {
           reject({
             type: "r_error",
-            message: `Executation Failed: ${
+            message: `Executation Failed:\n${
               runtimeError || "Unknown runtime error"
             }`,
           });

@@ -1,8 +1,6 @@
 const { spawn } = require("child_process");
 const path = require("path");
 
-// TODO: Add compilation and runtime error
-
 const executePy = (filepath, userInput) => {
   return new Promise((resolve, reject) => {
     const execute = spawn("python3", [filepath]);
@@ -26,15 +24,21 @@ const executePy = (filepath, userInput) => {
 
     // Handle errors
     execute.on("error", (err) => {
-      reject(err);
+      reject({ type: "r_error", message: err.message });
     });
 
     // Handle the child process exit
     execute.on("close", (code) => {
-      if (code) {
-        reject(new Error(`Script execution failed: ${errorOutput}`)); // Reject with the error output
+      if (code !== 0) {
+        // Non-zero exit code indicates an error
+        reject({
+          type: "r_error",
+          message: `Execution Failed:\n${
+            errorOutput || "Unknown runtime error"
+          }`,
+        });
       } else {
-        resolve(output);
+        resolve(output); // Execution was successful, resolve with the output
       }
     });
   });
