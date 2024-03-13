@@ -4,6 +4,8 @@ const { executeCpp } = require("./executeCpp");
 const Problem = require("./models/Problem");
 const { executePy } = require("./executePy");
 
+const CONCURRENCY_LEVEL = 4;
+
 const jobQueue = new Queue("job-queue", {
   redis: { host: "redis", port: 6379 },
 });
@@ -81,7 +83,7 @@ async function processJob(jobId) {
   }
 }
 
-jobQueue.process(async ({ data }) => {
+jobQueue.process(CONCURRENCY_LEVEL, async ({ data }) => {
   await processJob(data.id);
 });
 

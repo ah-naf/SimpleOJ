@@ -22,7 +22,7 @@ export interface ProblemType extends PropblemDetailType {
   _id: string;
   whoSolved: string[];
   createdBy: string;
-  timelimit: string
+  timelimit: string;
 }
 
 export interface UserType {
@@ -42,4 +42,5 @@ export interface UserSubmissionType {
   submittedAt: string;
   userId: UserType;
   problemId: PropblemDetailType;
+  status: string;
 }
