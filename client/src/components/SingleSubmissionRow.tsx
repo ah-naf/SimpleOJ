@@ -40,12 +40,25 @@ export default function SingleSubmissionRow({
             moment(submission.startedAt),
             "seconds",
             true
-          )/2}
+          ) / 2}
         </td>
-        <td className="pl-3 border">{submission.language}</td>
+        <td className="pl-3 border">{renderLanguage(submission.language)}</td>
       </tr>
     </>
   );
+}
+
+function renderLanguage(language: string) {
+  switch (language) {
+    case "cpp":
+      return "C++";
+    case "c":
+      return "C";
+    case "py":
+      return "Python";
+    default:
+      return language;
+  }
 }
 
 function renderStatus(submission: { status?: string; verdict?: string }) {
