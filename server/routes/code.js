@@ -1,7 +1,7 @@
 const Job = require("../models/Job");
 const router = require("express").Router();
 const { addJobToQueue, addSubmitToQueue } = require("../jobQueue");
-const { generateFile } = require("../generateFile");
+const { generateFile } = require("../ExecuteCode/generateFile");
 const verify = require("../middleware/verify");
 const fs = require("fs");
 const http = require("http");
@@ -83,7 +83,6 @@ router.get("/submissions", async (req, res) => {
       .sort({ submittedAt: -1 })
       .select("status language submittedAt verdict completedAt startedAt");
 
-      console.log(submissions)
     return res.status(200).json(submissions);
   } catch (error) {
     return res.status(500).json(error);

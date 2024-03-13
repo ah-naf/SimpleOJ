@@ -1,8 +1,8 @@
 const Queue = require("bull");
 const Job = require("./models/Job");
-const { executeCpp } = require("./executeCpp");
+const { executeCpp } = require("./ExecuteCode/executeCpp");
 const Problem = require("./models/Problem");
-const { executePy } = require("./executePy");
+const { executePy } = require("./ExecuteCode/executePy");
 
 const CONCURRENCY_LEVEL = 4;
 

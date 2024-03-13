@@ -33,7 +33,7 @@ const executeCpp = (filepath, userInput) => {
         }); // Reject with the compilation error
         return;
       }
-      const executeProcess = spawn("./outputs/" + jobId + ".out");
+      const executeProcess = spawn(outPath);
 
       executeProcess.stdin.write(userInput);
       executeProcess.stdin.end();
