@@ -256,6 +256,8 @@ function renderLanguage(language: string) {
       return "C";
     case "py":
       return "Python";
+    case "java":
+      return "Java";
     default:
       return language;
   }
