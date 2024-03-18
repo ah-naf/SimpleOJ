@@ -57,6 +57,7 @@ export default function Editor() {
           <option value="cpp">C++</option>
           <option value="py">Python</option>
           <option value="c">C</option>
+          <option value="java">Java</option>
         </select>
         <select
           value={theme}

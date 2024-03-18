@@ -4,16 +4,16 @@ const path = require("path");
 
 const outputPath = path.join(__dirname, "codes");
 
-const executeCpp = (filepath, userInput) => {
+const executeJava = (filepath, userInput) => {
   return new Promise((resolve, reject) => {
     const jobId = path.basename(filepath).split(".")[0];
-    const outPath = path.join(path.dirname(filepath), `${jobId}.out`);
-    
-    const compileProcess = spawn("g++", [filepath, "-o", outPath]);
+
+    const compileProcess = spawn("javac", [filepath]);
 
     let compileError = ""; // Variable to store the compilation error message
 
     compileProcess.on("error", (error) => {
+      console.log(error);
       reject({ type: "c_error", message: error.message });
     });
 
@@ -29,7 +29,11 @@ const executeCpp = (filepath, userInput) => {
         }); // Reject with the compilation error
         return;
       }
-      const executeProcess = spawn(outPath);
+
+      const executeDirectory = path.dirname(filepath); // Directory where the file is
+      const executeProcess = spawn("java", ["-cp", executeDirectory, "Main"], {
+        cwd: executeDirectory,
+      });
 
       executeProcess.stdin.write(userInput);
       executeProcess.stdin.end();
@@ -66,5 +70,5 @@ const executeCpp = (filepath, userInput) => {
 };
 
 module.exports = {
-  executeCpp,
+  executeJava,
 };
