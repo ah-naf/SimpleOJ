@@ -4,7 +4,7 @@ const JobSchema = new mongoose.Schema({
   language: {
     type: String,
     required: true,
-    enum: ["cpp", "py", "c"],
+    enum: ["cpp", "py", "c", 'java'],
   },
   filepath: {
     type: String,

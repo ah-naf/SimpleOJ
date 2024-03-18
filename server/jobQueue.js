@@ -3,6 +3,7 @@ const Job = require("./models/Job");
 const { executeCpp } = require("./ExecuteCode/executeCpp");
 const Problem = require("./models/Problem");
 const { executePy } = require("./ExecuteCode/executePy");
+const { executeJava } = require("./ExecuteCode/executeJava");
 
 const CONCURRENCY_LEVEL = 4;
 
@@ -16,6 +17,8 @@ async function executeJob(job) {
     job = job._doc;
     if (job.language === "cpp" || job.language === "c") {
       return executeCpp(job.filepath, userInput || "");
+    } else if (job.language === "java") {
+      return executeJava(job.filepath, userInput || "");
     } else {
       return executePy(job.filepath, userInput || "");
     }
@@ -48,7 +51,7 @@ async function processSubmission(job) {
   const endTime = new Date().getTime(); // End time for execution
 
   const executionTime = endTime - startTime; // Calculate execution time
-  if ((executionTime / 2) > problem.timelimit * 1000) {
+  if (executionTime / 2 > problem.timelimit * 1000) {
     job.verdict = "tle"; // Set verdict as TLE if execution time exceeds the limit
     passed = false;
   } else {
