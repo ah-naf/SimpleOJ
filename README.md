@@ -1,6 +1,6 @@
 # SimpleOJ
 
-SimpleOJ is an interactive online platform for coding enthusiasts. It allows users to solve programming challenges and run code snippets in C, C++, and Python.
+SimpleOJ is an interactive online platform for coding enthusiasts. It allows users to solve programming challenges and run code snippets in C, C++, Java, and Python.
 
 ## Demo
 
@@ -19,7 +19,7 @@ For a visual demonstration of SimpleOJ in action, check out our [video demo](htt
 
 ### Running Code
 
-SimpleOJ uses Node.js child processes to execute C, C++, and Python code. The execution is managed in the backend, ensuring secure and isolated runtime environments for each code snippet.
+SimpleOJ uses Node.js child processes to execute C, C++, Java and Python code. The execution is managed in the backend, ensuring secure and isolated runtime environments for each code snippet.
 
 ### Technology Stack
 
