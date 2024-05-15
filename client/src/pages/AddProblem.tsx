@@ -52,8 +52,6 @@ export default function AddProblem() {
     }
   }, [editDetails, problem]);
 
-  console.log(problem);
-
   const handleAdd = async () => {
     // Handle Problem Edit
     if (problem && editDetails.edit === "true" && editDetails.problemId) {

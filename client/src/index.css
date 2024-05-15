@@ -55,22 +55,36 @@
   overflow-x: auto;
 }
 
-.w-md-editor-preview > p {
+.w-md-editor-preview > p, .wmde-markdown {
   font-family: "Ubuntu Mono" !important;
+  color: black !important;
+  background-color: white !important;
 }
-
+.w-md-editor-preview {
+  background-color: white !important;
+}
 .modal-explanation .w-md-editor-toolbar > ul > li > button > svg {
   width: 15px;
   height: 15px;
 }
 
-.modal-explanation .w-md-editor-toolbar {
+.wmde-markdown pre > code, .wmde-markdown table th, .wmde-markdown table td {
+  color: wheat !important;
+}
+
+ .w-md-editor-toolbar {
   height: 80px !important;
+  background-color: white !important;
+  padding: 0 !important;
 }
 
 .problemPage {
   height: calc(100vh - 85px);
   /* overflow: hidden; */
+}
+
+.w-md-editor-area {
+  background-color: white !important;
 }
 
 .nextui-c-ftJsHY {
@@ -89,6 +103,8 @@
   scrollbar-width: none !important;
   /* Firefox */
   -ms-overflow-style: none !important;
+  background-color: white !important;
+  color: black !important;
 }
 
 .w-md-editor-text-input::-webkit-scrollbar,
