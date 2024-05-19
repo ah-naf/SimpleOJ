@@ -2,6 +2,8 @@
 
 SimpleOJ is an interactive online platform for coding enthusiasts. It allows users to solve programming challenges and run code snippets in C, C++, Java, and Python.
 
+You can use [@ah_naf/runcode](https://www.npmjs.com/package/@ah_naf/runcode) npm package to run C, C++, Python and Java code.
+
 ## Demo
 
 For a visual demonstration of SimpleOJ in action, check out our [video demo](https://youtu.be/Xfc7_3AgQOw).
