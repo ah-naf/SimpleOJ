@@ -6,7 +6,12 @@ You can use [@ah_naf/runcode](https://www.npmjs.com/package/@ah_naf/runcode) npm
 
 ## Demo
 
-For a visual demonstration of SimpleOJ in action, check out our [video demo](https://youtu.be/Xfc7_3AgQOw).
+For a visual demonstration of SimpleOJ in action, check out our video demo:
+<center>
+  <a href="https://www.youtube.com/watch?v=Xfc7_3AgQOw">
+    <img src="https://img.youtube.com/vi/Xfc7_3AgQOw/0.jpg" alt="Route Demo" width="480" height="360">
+  </a>
+</center>
 
 ## Features
 
